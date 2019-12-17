@@ -12,21 +12,25 @@
           id="file-small" size="sm"
           accept=".wav, .mp3"
           v-model="file"
-          ref="file-input"
+          ref="file-input-l"
           :state="Boolean(file)"
           placeholder="Choose a file or drop it here..."
           drop-placeholder="Drop file here...">
         </b-form-file> 
         
+        <b-form inline>
         <b-col lg="4" class="pb-2">
           <b-button
             size="sm"   
-            @click="clearFiles()" 
+            @click="clearLeftFiles()" 
             class="mr-2">Reset
           </b-button>
         </b-col> 
         
-        <p class="mt-2">Selected file: {{file ? file.name : ''}}</p>
+        <p class="mt-3">Selected file: {{file ? file.name : ''}}</p>
+        
+        </b-form>
+       
       
       </b-form-group>
     </div>
@@ -39,23 +43,25 @@
           class="mb-2"
           id="file-small" size="sm"
           accept=".wav, .mp3"
-          v-model="file"
-          ref="file-input"
-          :state="Boolean(file)"
+          v-model="file2"
+          ref="file-input-r"
+          :state="Boolean(file2)"
           placeholder="Choose a file or drop it here..."
           drop-placeholder="Drop file here...">
         </b-form-file> 
         
-        <b-col lg="4" class="pb-2">
+        <b-form inline>
+          <b-col lg="4" class="pb-2">
           <b-button
             size="sm"   
-            @click="clearFiles()" 
+            @click="clearRightFiles()" 
             class="mr-2">Reset
           </b-button>
         </b-col>
         
-        <p class="mt-2">Selected file: {{file ? file.name : ''}}</p>
-      
+        <p class="mt-3">Selected file: {{file2 ? file2.name : ''}}</p>
+        </b-form>
+        
       
       </b-form-group>
     </div>
@@ -76,12 +82,16 @@ export default {
   data() {
     return {
       file: null,
+      file2: null
     }
   },
 
   methods: {
-    clearFiles() {
-      this.$refs['file-input'].reset()
+    clearLeftFiles() {
+      this.$refs['file-input-l'].reset()
+    },
+    clearRightFiles() {
+      this.$refs['file-input-r'].reset()
     }
   }
 }
