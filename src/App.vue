@@ -2,7 +2,7 @@
   <div id="app">
     
     <PimpMySound msg="Welcome to Pimp My Sound"/>
-    
+
     <!-- Styled left file input bar-->
     <b-card id="card-left" bg-variant="light" class="text-center"> 
       <div id="center-file-input-bar">
@@ -84,16 +84,20 @@
         </b-form-group>
       </div>
     </b-card>
+
+    <CrossFader/>
+
   </div>
 </template>
 
 <script>
 import PimpMySound from './components/PimpMySound.vue'
+import CrossFader from './components/Crossfader.vue'
 
 export default {
   name: 'app',
   components: {
-    PimpMySound,
+    PimpMySound, CrossFader
   },
 
   data() {

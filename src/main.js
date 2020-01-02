@@ -8,6 +8,12 @@ Vue.use(BootstrapVue);
 
 Vue.config.productionTip = false
 
+//---------------------Global Objects to import!---------------------//
+//Eventbus for communicating between components
+export const EventBus = new Vue();
+export const AudioCtx = new AudioContext();
+//------------------------------------------------------------------//
+
 new Vue({
   render: h => h(App),
 }).$mount('#app')
