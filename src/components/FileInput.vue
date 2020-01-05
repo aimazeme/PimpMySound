@@ -8,7 +8,7 @@
             id="file-small" size="sm"
             accept=".wav, .mp3"
             v-model="file"
-            ref="file-input-l"
+            ref="file-input"
             :state="Boolean(file)"
             placeholder="Choose a file or drop it here..."
             drop-placeholder="Drop file here...">
@@ -47,7 +47,6 @@ export default {
     data() {
         return {
         file: null,
-        file2: null,
         myToggle: false,
         buttons: [
             { caption: 'backward', state: false },
@@ -55,15 +54,8 @@ export default {
             { caption: 'Play', state: false },
             { caption: 'Stop', state: false },
             { caption: 'forward', state: false }
-        ],
-        buttons2: [
-            { caption2: 'backward', state2: false },
-            { caption2: 'Pause', state2: false },
-            { caption2: 'Play', state2: false },
-            { caption2: 'Stop', state2: false },
-            { caption2: 'forward', state2: false }
         ]
-        }
+      }
     },  
   
     computed: {
@@ -74,10 +66,7 @@ export default {
    
     methods: {
         clearLeftFiles() {
-            this.$refs['file-input-l'].reset()
-        },
-        clearRightFiles() {
-            this.$refs['file-input-r'].reset()
+            this.$refs['file-input'].reset()
         }
     }
 }
@@ -86,16 +75,18 @@ export default {
 <style scoped>
 
 #card{
-  width: 45%;
+  width: 46%;
   height: 50%;
   float: left;
-  margin-left: 4.5%; 
+  margin-left: 2%;
+  margin-right: 2%; 
 }
 
 #file-input-bar {
   width: 20%;
   height: 50%;
   margin-left: 1rem;
+  margin-right: 1rem;
   margin-top: 4rem;
   float:left;
 }

@@ -36,7 +36,7 @@ export default {
             this.gainNode1.connect(AudioCtx.destination);
             this.gainNode2.connect(AudioCtx.destination);
             // eslint-disable-next-line no-console
-            console.log("Cpnnected to: Crossfader");
+            console.log("Connected to: Crossfader");
             EventBus.$off();
         });
 
