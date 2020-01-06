@@ -41,6 +41,21 @@
 </template>
 
 <script>
+import { EventBus } from '../main';
+import { AudioCtx } from '../main';
+
+/**
+ * Audio States
+ */
+const EnumAudioStates = {
+  //Match this the buttons order in data
+  isBackwarding: 1  ,  
+  isPaused: 2,
+  isPlaying: 3,
+  isStopped: 4,
+  isForwarding: 5
+};
+
 export default {
     name: 'FileInput',
 
@@ -49,12 +64,14 @@ export default {
         file: null,
         myToggle: false,
         buttons: [
-            { caption: 'backward', state: false },
+            { caption: 'Backward', state: false },
             { caption: 'Pause', state: false },
             { caption: 'Play', state: false },
             { caption: 'Stop', state: false },
-            { caption: 'forward', state: false }
-        ]
+            { caption: 'Forward', state: false }
+        ],
+        source: AudioBufferSourceNode,
+        audioState: EnumAudioStates.isStopped,
       }
     },  
   
@@ -66,14 +83,79 @@ export default {
    
     methods: {
         clearLeftFiles() {
-            this.$refs['file-input'].reset()
+          this.$refs['file-input'].reset()
+        },
+
+        /**
+         * Loads the audio file into the buffer
+         * @param {"path to the audio file"} url
+         */
+        loadAudio(url) {
+          this.source = AudioCtx.createBufferSource(); 
+          //Have to use arrow functions because "function" would change the context of "this"
+          fetch(url).then(response => {
+              response.arrayBuffer().then(audioData => {
+                  AudioCtx.decodeAudioData(audioData).then(buffer => {
+                      this.source.buffer = buffer;              
+                  });
+              });
+          });
+        },
+
+        /**
+         * Change the internal audioState to the new one
+         * and set the previous enabled button false 
+         * @since only one button can be true at a time
+         */
+        changeCurrentStateTo(newState) {
+          this.buttons[this.audioState].state = false;
+          this.audioState = newState;
+        },
+
+        /**
+         * Starts playing the audio anew
+         */
+        playAudio() {
+          if (this.file !== null && this.audioState === EnumAudioStates.isStopped) {
+            this.loadAudio(this.file);
+            this.source.start(0);
+            this.changeCurrentStateTo(EnumAudioStates.isPlaying);
+            //TODO!
+            EventBus.$emit('to-nextComponent', this.source);
+          }
+        },
+    
+        /**
+         * Pauses the music or resumes it if it was paused 
+         */
+        pauseMusic() {
+          if (this.audioState !== EnumAudioStates.isPaused) {
+            //Pause audio
+            AudioCtx.suspend();
+            this.changeCurrentStateTo(EnumAudioStates.isPaused);
+          } else {
+            //Resume audio
+            AudioCtx.resume();
+            this.changeCurrentStateTo(EnumAudioStates.isPlaying);
+          }         
+        },
+
+        /**
+         * Completely stops the audio, needs to be played anew
+         */
+        stopAudio() {
+          if (this.audioState !== EnumAudioStates.isStopped) {
+            this.source.stop(); 
+            if (this.audioState === EnumAudioStates.isPaused) AudioCtx.resume();
+            this.changeCurrentStateTo(EnumAudioStates.isStopped)
+          }
         }
+        
     }
 }
 </script>
 
 <style scoped>
-
 #card{
   width: 46%;
   height: 50%;
@@ -94,5 +176,4 @@ export default {
 #reset {
   float: left;
 }
-
 </style>

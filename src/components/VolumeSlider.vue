@@ -4,7 +4,7 @@
         <input type="range" min="0" max= {sliderMaxValue} v-model="sliderValue" class="slider" v-on:input="adjustCrossfading">
 
         <div>
-            <label class="sliderLabel">CrossFader</label>
+            <label class="sliderLabel">Volume</label>
         </div>
 
     </div>
@@ -15,48 +15,38 @@ import {EventBus} from '../main.js';
 import {AudioCtx} from '../main.js';
 
 export default {
-    name: 'Crossfader',
+    name: 'VolumeSlider',
     data() {
         
         return {
             sliderMaxValue: 100,
             sliderValue: 0,
-            gainNode1: GainNode,
-            gainNode2: GainNode,
+            gainNode: GainNode
         }     
     },
 
     created() {
-        this.gainNode1 = AudioCtx.createGain();
-        this.gainNode2 = AudioCtx.createGain();
+        this.gainNode = AudioCtx.createGain();
 
-        EventBus.$on('to-crossFader', (audioNodeA, audioNodeB) => {
-            audioNodeA.connect(this.gainNode1);
-            audioNodeB.connect(this.gainNode2);
+        EventBus.$on('to-volumeSlider', (audioNodeA) => {
+            audioNodeA.connect(this.gainNode);
             // eslint-disable-next-line no-console
             console.log("Connected to: Crossfader");
 
-            this.gainNode1.connect(AudioCtx.destination);
-            this.gainNode2.connect(AudioCtx.destination);
-            
-            EventBus.$off();
+            //TODO!: Connect to something else
+            EventBus.$emit('to-nextComponent', this.gainNode);
         });
 
         
     },
 
     methods: {
-        adjustCrossfading() {
+        adjustVolume() {
             //Calculate new values with sliderValue (gain values are between 0..1)
             const PERCENTAGE = parseInt(this.sliderValue) / parseInt(this.sliderMaxValue);
 
-            //Linear (with Cosinus) Curve
-            // this.gainNode1.gain.value = Math.cos(PERCENTAGE * Math.PI / 2);
-            // this.gainNode2.gain.value = Math.cos((1-PERCENTAGE) * Math.PI / 2);
-
             //Exponential curve
-            this.gainNode1.gain.value = Math.pow(1 - (PERCENTAGE - 1), 2);
-            this.gainNode2.gain.value = 1 - Math.pow(PERCENTAGE, 2)
+            this.gainNode.gain.value = PERCENTAGE * PERCENTAGE;
         },
     }
 }
@@ -78,7 +68,7 @@ export default {
 .slider {
     -webkit-appearance: none;
     margin-top: .5em;
-    width: 80%;
+    width: 30%;
     height: 15px;
     border-radius: 5px;  
     background: #d3d3d3;
