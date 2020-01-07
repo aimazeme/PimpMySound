@@ -59,8 +59,8 @@ export default {
             // this.gainNode2.gain.value = 1 - Math.pow( (PERCENTAGE - 1), 2);
 
             //Exponential curve
-            this.gainNode1.gain.value = Math.pow(2, PERCENTAGE) - 1;
-            this.gainNode2.gain.value = Math.pow(2, -PERCENTAGE + 1) - 1;
+            this.gainNode1.gain.value = Math.pow(2, -PERCENTAGE + 1) - 1;
+            this.gainNode2.gain.value = Math.pow(2, PERCENTAGE) - 1;
 
             //Squareroot curve
             // this.gainNode1.gain.value = Math.sqrt(1-x);
