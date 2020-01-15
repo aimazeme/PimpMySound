@@ -1,7 +1,7 @@
 <template>
     <div class="sliderContainer">
         
-        <input type="range" min="0" max= {sliderMaxValue} v-model="sliderValue" class="slider" v-on:input="adjustCrossfading">
+        <input type="range" min="0" max= {sliderMaxValue} v-model="sliderValue" class="slider" v-on:input="adjustCrossfading()">
 
         <div>
             <label class="sliderLabel">CrossFader</label>
@@ -23,6 +23,7 @@ export default {
             sliderValue: 0,
             gainNode1: GainNode,
             gainNode2: GainNode,
+            oneIsConnected: false
         }     
     },
 
@@ -30,19 +31,25 @@ export default {
         this.gainNode1 = AudioCtx.createGain();
         this.gainNode2 = AudioCtx.createGain();
 
-        EventBus.$on('to-crossFader', (audioNodeA, audioNodeB) => {
-            audioNodeA.connect(this.gainNode1);
-            audioNodeB.connect(this.gainNode2);
-            // eslint-disable-next-line no-console
-            console.log("Connected to: Crossfader");
-
-            this.gainNode1.connect(AudioCtx.destination);
-            this.gainNode2.connect(AudioCtx.destination);
-            
-            EventBus.$off();
+        EventBus.$on('to-crossFader', (data) => {
+            if (data.playerNr === 1) {
+                data.audioNode.connect(this.gainNode1); 
+                this.adjustCrossfading();
+                window.console.log("Source 1 connected to crossfader");
+            }          
+            else {
+                data.audioNode.connect(this.gainNode2);  
+                this.adjustCrossfading();
+                window.console.log("Source 2 connected to crossfader");
+            }                       
         });
 
         
+    },
+    
+    mounted() {
+        this.gainNode1.connect(AudioCtx.destination);
+        this.gainNode2.connect(AudioCtx.destination);
     },
 
     methods: {

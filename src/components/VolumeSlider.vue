@@ -1,7 +1,7 @@
 <template>
     <div class="sliderContainer">
         
-        <input type="range" min="0" max= {sliderMaxValue} v-model="sliderValue" class="slider" v-on:input="adjustCrossfading">
+        <input type="range" min="0" max= {sliderMaxValue} v-model="sliderValue" class="slider" v-on:input="adjustVolume">
 
         <div>
             <label class="sliderLabel">Volume</label>
@@ -30,11 +30,8 @@ export default {
 
         EventBus.$on('to-volumeSlider', (audioNodeA) => {
             audioNodeA.connect(this.gainNode);
-            // eslint-disable-next-line no-console
-            console.log("Connected to: Crossfader");
-
-            //TODO!: Connect to something else
-            EventBus.$emit('to-nextComponent', this.gainNode);
+            window.console.log("Connected to: VolumeSlider");
+            EventBus.$emit('to-anotherAudioNode', this.gainNode);
         });
 
         
@@ -54,7 +51,11 @@ export default {
 
 <style scoped>
 .sliderContainer {
-    width: 100%;
+   width: 46%;
+   height: 50%;
+   float: left;
+   margin-left: 2%;
+   margin-right: 2%; 
 }
 
 .sliderLabel {
@@ -68,7 +69,7 @@ export default {
 .slider {
     -webkit-appearance: none;
     margin-top: .5em;
-    width: 30%;
+    width: 100%;
     height: 15px;
     border-radius: 5px;  
     background: #d3d3d3;

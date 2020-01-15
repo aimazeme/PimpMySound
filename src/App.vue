@@ -1,10 +1,9 @@
 <template>
   <div id="app">
-    
     <PimpMySound msg="Welcome to Pimp My Sound"/>
-    <FileInput/>
-    <FileInput/>
-    <CrossFader/>
+    <FileInput v-bind:playerNr="1"/>
+    <FileInput v-bind:playerNr="2"/>
+    <CrossFader/>   
     <VolumeSlider/>
     <FileList/>
 

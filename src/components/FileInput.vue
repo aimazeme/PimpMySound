@@ -29,7 +29,7 @@
               v-for="(btn, idx) in buttons"
               :key="idx"
               :pressed.sync="btn.state"
-              @click="execute(btn.caption)"
+              @click="execute2(btn.caption)"
               variant="secondary">
               {{ btn.caption }}
             </b-button>
@@ -50,15 +50,18 @@ import { AudioCtx } from '../main';
  */
 const EnumAudioStates = {
   //Match this the buttons order in data
-  isBackwarding: 1  ,  
-  isPaused: 2,
-  isPlaying: 3,
-  isStopped: 4,
-  isForwarding: 5
+  isBackwarding: 0  ,  
+  isPaused: 1,
+  isPlaying: 2,
+  isStopped: 3,
+  isForwarding: 4
 };
 
 export default {
     name: 'FileInput',
+    props: {
+      playerNr: Number
+    },
 
     data: function() {
         return {
@@ -77,21 +80,21 @@ export default {
             ]
       }
     }, 
-      async mounted() {
-    EventBus.$on("fileChosen", file => {
+    async mounted() {
+      EventBus.$on("fileChosen", file => {
       this.loadFile(file);
-    });
-  }, 
-  watch:{
-    file: function(){
+      });
+    }, 
+    watch:{
+      file: function(){
 
-      // Lädt den Buffer ins Audio
-      this.loadAudio(this.file);
-      
-      // Verbindet AudioCtx mit Ausgang
-      this.source.connect(AudioCtx.destination);
-    }
-  },
+        // Lädt den Buffer ins Audio
+        this.loadAudio(this.file);
+        
+        // Verbindet AudioCtx mit Ausgang
+        this.source.connect(AudioCtx.destination);
+      }
+    },
     computed: {
         btnStates() {
             return this.buttons.map(btn => btn.state)
@@ -101,14 +104,30 @@ export default {
         clearLeftFiles() {
           this.$refs['file-input'].reset()
         },
+
         execute(state){
-        if(state === 'Play'){
-          window.console.log(this.source)
-          this.source.start(0);
-        } else {
-          alert(state)
-        }
-},
+          if(state === 'Play'){
+            window.console.log(this.source)
+            this.source.start(0);
+          } else {
+            alert(state)
+          }
+        },
+
+        execute2(state) {
+          switch (state) {
+            case 'Play':
+              this.playAudio();
+              break;
+            case 'Pause':
+              this.pauseMusic();
+              break;
+            case 'Stop':
+              this.stopAudio()
+              break;
+          }
+        },
+
         /**
          * Loads the audio file into the buffer
          * @param {"path to the audio file"} url
@@ -131,6 +150,7 @@ export default {
          */
         changeCurrentStateTo(newState) {
           this.buttons[this.audioState].state = false;
+          this.buttons[newState].state = true;
           this.audioState = newState;
         },
 
@@ -138,14 +158,18 @@ export default {
          * Starts playing the audio anew
          */
         playAudio() {
-          if (this.file !== null && this.audioState === EnumAudioStates.isStopped) {
-            this.loadAudio(this.file);
-            this.source.start(0);
-            this.changeCurrentStateTo(EnumAudioStates.isPlaying);
-            //TODO!
-            EventBus.$emit('to-nextComponent', this.source);
-          }
+          if (this.file !== null) {       
+            if (this.audioState === EnumAudioStates.isPlaying) this.stopAudio();
+            else {
+              this.loadAudio(this.file);
+              this.source.start(0);
+              this.changeCurrentStateTo(EnumAudioStates.isPlaying);
+              EventBus.$emit('to-crossFader', {audioNode: this.source, playerNr: this.playerNr});
+            }
+            
+          } else this.buttons[EnumAudioStates.isPlaying].state = false;
         },
+
         /**
          * Pauses the music or resumes it if it was paused 
          */
@@ -167,16 +191,17 @@ export default {
         stopAudio() {
           if (this.audioState !== EnumAudioStates.isStopped) {
             this.source.stop(); 
-            if (this.audioState === EnumAudioStates.isPaused) AudioCtx.resume();
-            this.changeCurrentStateTo(EnumAudioStates.isStopped)
-          }
+            if (this.audioState === EnumAudioStates.isPaused) AudioCtx.resume(); 
+            this.changeCurrentStateTo(EnumAudioStates.isStopped)        
+          } else this.playAudio();
+          
         },
         
         loadFile(file) {
-      if (file.target.files.length == 0) return;
-      this.file = file;
-      window.console.log(file.target.files[0]);
-    }
+          if (file.target.files.length == 0) return;
+          this.file = file;
+          window.console.log(file.target.files[0]);
+        }
         
     }
 }
