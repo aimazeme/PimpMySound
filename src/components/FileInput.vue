@@ -34,7 +34,7 @@
               {{ btn.caption }}
             </b-button>
           </b-button-group>
-          <p>Pressed States: <strong>{{ btnStates }}</strong></p>
+          <!-- <p>Pressed States: <strong>{{ btnStates }}</strong></p> -->
 
         </b-form-group>
       </div> 
@@ -73,8 +73,7 @@ export default {
         ],
         source: AudioBufferSourceNode,
         audioState: EnumAudioStates.isStopped,
-        songs: [
-            ]
+
       }
     }, 
       async mounted() {
@@ -99,16 +98,24 @@ export default {
     },
     methods: {
         clearLeftFiles() {
-          this.$refs['file-input'].reset()
-        },
-        execute(state){
-        if(state === 'Play'){
-          window.console.log(this.source)
-          this.source.start(0);
-        } else {
-          alert(state)
-        }
-},
+            this.$refs['file-input'].reset()
+          },
+          execute(state) {
+            if (state === 'Play') {
+              if (AudioCtx.state == 'suspended') {
+                AudioCtx.resume();
+              } else {
+                //TODO: Button muss umbenannt werden in resume
+                this.source.start(0);
+              }
+            } else if (state === 'Pause') {
+              AudioCtx.suspend();
+            } else if (state === 'Stop') {
+              this.AudioCtx = null;
+              this.file = null;
+              window.console.log('Stop ')
+            }
+          },
         /**
          * Loads the audio file into the buffer
          * @param {"path to the audio file"} url
