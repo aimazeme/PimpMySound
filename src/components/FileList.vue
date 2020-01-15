@@ -46,7 +46,6 @@ export default {
                     source: require('../audio/Wartemusik.mp3')
                 },
             ],
-            fileSystem: require('fs')
         }
         },
         methods: {
@@ -61,9 +60,10 @@ export default {
                     window.console.log(this.file2)
                     var newSong = {
                         title: this.file2.name,
-                        source: this.file2.source
+                        source: this.file2
                     }
                     window.console.log(URL.createObjectURL(newSong))
+                    newSong;
                     this.songs.push(newSong);
                    
                     this.$refs['fileinput'].reset()

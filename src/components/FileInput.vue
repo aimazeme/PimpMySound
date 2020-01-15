@@ -60,7 +60,7 @@ const EnumAudioStates = {
 export default {
     name: 'FileInput',
 
-    data() {
+    data: function() {
         return {
         file: null,
         myToggle: false,
@@ -73,6 +73,8 @@ export default {
         ],
         source: AudioBufferSourceNode,
         audioState: EnumAudioStates.isStopped,
+        songs: [
+            ]
       }
     }, 
       async mounted() {
@@ -96,9 +98,7 @@ export default {
         },
         execute(state){
         if(state === 'Play'){
-          window.console.log(this.file)
-          //  this.loadAudio(this.file)
-           this.playAudio();
+          window.console.log(this.songs);
         } else {
           alert(state)
         }
