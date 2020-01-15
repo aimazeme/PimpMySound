@@ -84,7 +84,12 @@ export default {
   }, 
   watch:{
     file: function(){
-      this.log(this)
+
+      // Lädt den Buffer ins Audio
+      this.loadAudio(this.file);
+      
+      // Verbindet AudioCtx mit Ausgang
+      this.source.connect(AudioCtx.destination);
     }
   },
     computed: {
@@ -98,7 +103,8 @@ export default {
         },
         execute(state){
         if(state === 'Play'){
-          window.console.log(this.songs);
+          window.console.log(this.source)
+          this.source.start(0);
         } else {
           alert(state)
         }
@@ -107,16 +113,15 @@ export default {
          * Loads the audio file into the buffer
          * @param {"path to the audio file"} url
          */
-        loadAudio(url) {
+        loadAudio(response) {
           this.source = AudioCtx.createBufferSource(); 
           //Have to use arrow functions because "function" would change the context of "this"
-          fetch(url).then(response => {
               response.arrayBuffer().then(audioData => {
                   AudioCtx.decodeAudioData(audioData).then(buffer => {
-                      this.source.buffer = buffer;              
+                      this.source.buffer = buffer;       
+                      window.console.log(buffer)       
                   });
               });
-          });
         },
 
         /**
@@ -141,18 +146,6 @@ export default {
             EventBus.$emit('to-nextComponent', this.source);
           }
         },
-        loadAudioFile(){
-            let fr = new FileReader();
-            fr.readAsDataURL(this.file);
-            fr.onload = e => {
-              var audio = document.createElement('audio');
-              audio.src = e.target.result;
-              var context = new(window.AudioContext || window.webkitAudioContext)(),
-                source = context.createMediaElementSource(audio);
-              window.console.log(source);
-            };
-        },
-    
         /**
          * Pauses the music or resumes it if it was paused 
          */
@@ -178,6 +171,7 @@ export default {
             this.changeCurrentStateTo(EnumAudioStates.isStopped)
           }
         },
+        
         loadFile(file) {
       if (file.target.files.length == 0) return;
       this.file = file;
