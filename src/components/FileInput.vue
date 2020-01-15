@@ -6,12 +6,12 @@
           <b-form-file 
             class="mb-2"
             id="file-small" size="sm"
-            accept=".wav, .mp3"
+            accept=".wav, .mp3, .m4a"
             v-model="file"
             ref="file-input"
             :state="Boolean(file)"
             placeholder="Choose a file or drop it here..."
-            drop-placeholder="Drop file here...">
+            drop-placeholder="Drop file here..." >
           </b-form-file> 
           
           <b-form inline>
@@ -29,6 +29,7 @@
               v-for="(btn, idx) in buttons"
               :key="idx"
               :pressed.sync="btn.state"
+              @click="execute(btn.caption)"
               variant="secondary">
               {{ btn.caption }}
             </b-button>
@@ -73,19 +74,35 @@ export default {
         source: AudioBufferSourceNode,
         audioState: EnumAudioStates.isStopped,
       }
-    },  
-  
+    }, 
+      async mounted() {
+    EventBus.$on("fileChosen", file => {
+      this.loadFile(file);
+    });
+  }, 
+  watch:{
+    file: function(){
+      this.log(this)
+    }
+  },
     computed: {
         btnStates() {
             return this.buttons.map(btn => btn.state)
         }
     },
-   
     methods: {
         clearLeftFiles() {
           this.$refs['file-input'].reset()
         },
-
+        execute(state){
+        if(state === 'Play'){
+          window.console.log(this.file)
+          //  this.loadAudio(this.file)
+           this.playAudio();
+        } else {
+          alert(state)
+        }
+},
         /**
          * Loads the audio file into the buffer
          * @param {"path to the audio file"} url
@@ -124,6 +141,17 @@ export default {
             EventBus.$emit('to-nextComponent', this.source);
           }
         },
+        loadAudioFile(){
+            let fr = new FileReader();
+            fr.readAsDataURL(this.file);
+            fr.onload = e => {
+              var audio = document.createElement('audio');
+              audio.src = e.target.result;
+              var context = new(window.AudioContext || window.webkitAudioContext)(),
+                source = context.createMediaElementSource(audio);
+              window.console.log(source);
+            };
+        },
     
         /**
          * Pauses the music or resumes it if it was paused 
@@ -149,7 +177,12 @@ export default {
             if (this.audioState === EnumAudioStates.isPaused) AudioCtx.resume();
             this.changeCurrentStateTo(EnumAudioStates.isStopped)
           }
-        }
+        },
+        loadFile(file) {
+      if (file.target.files.length == 0) return;
+      this.file = file;
+      window.console.log(file.target.files[0]);
+    }
         
     }
 }
