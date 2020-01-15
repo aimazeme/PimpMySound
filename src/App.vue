@@ -14,13 +14,12 @@
 import PimpMySound from './components/PimpMySound.vue'
 import FileInput from './components/FileInput.vue'
 import CrossFader from './components/Crossfader.vue'
-import VolumeSlider from './components/VolumeSlider.vue'
 import FileList from './components/FileList.vue'
 
 export default {
   name: 'app',
   components: {
-    PimpMySound, FileInput, CrossFader, VolumeSlider, FileList
+    PimpMySound, FileInput, CrossFader, FileList
   }
 }
 </script>

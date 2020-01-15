@@ -20,7 +20,7 @@ export default {
         
         return {
             sliderMaxValue: 100,
-            sliderValue: 0,
+            sliderValue: 100,
             gainNode: GainNode
         }     
     },

@@ -29,7 +29,7 @@
               v-for="(btn, idx) in buttons"
               :key="idx"
               :pressed.sync="btn.state"
-              @click="execute2(btn.caption)"
+              @click="execute(btn.caption)"
               variant="secondary">
               {{ btn.caption }}
             </b-button>
@@ -49,8 +49,8 @@ import { AudioCtx } from '../main';
  * Audio States
  */
 const EnumAudioStates = {
-  //Match this the buttons order in data
-  isBackwarding: 0  ,  
+  //Match the number with the button array indices
+  isBackwarding: 0,  
   isPaused: 1,
   isPlaying: 2,
   isStopped: 3,
@@ -76,8 +76,9 @@ export default {
         ],
         source: AudioBufferSourceNode,
         audioState: EnumAudioStates.isStopped,
-        songs: [
-            ]
+        startTime: Number,
+        currentTime: Number,
+        songs: []
       }
     }, 
     async mounted() {
@@ -85,42 +86,35 @@ export default {
       this.loadFile(file);
       });
     }, 
-    watch:{
-      file: function(){
 
+    watch:{
+      file: function(){       
         // Lädt den Buffer ins Audio
-        this.loadAudio(this.file);
-        
-        // Verbindet AudioCtx mit Ausgang
-        this.source.connect(AudioCtx.destination);
+        if (this.audioState === EnumAudioStates.isPlaying) this.source.stop();
+        this.buttons[this.audioState].state = false;
+        this.audioState = EnumAudioStates.isStopped;
+        this.loadAudio(this.file);       
       }
     },
+
     computed: {
         btnStates() {
             return this.buttons.map(btn => btn.state)
         }
     },
+
     methods: {
         clearLeftFiles() {
           this.$refs['file-input'].reset()
         },
 
-        execute(state){
-          if(state === 'Play'){
-            window.console.log(this.source)
-            this.source.start(0);
-          } else {
-            alert(state)
-          }
-        },
-
-        execute2(state) {
+        execute(state) {
           switch (state) {
             case 'Play':
-              this.playAudio();
+              this.playAudio(0);
               break;
             case 'Pause':
-              this.pauseMusic();
+              this.pauseAudio();
               break;
             case 'Stop':
               this.stopAudio()
@@ -134,13 +128,11 @@ export default {
          */
         loadAudio(response) {
           this.source = AudioCtx.createBufferSource(); 
-          //Have to use arrow functions because "function" would change the context of "this"
-              response.arrayBuffer().then(audioData => {
-                  AudioCtx.decodeAudioData(audioData).then(buffer => {
-                      this.source.buffer = buffer;       
-                      window.console.log(buffer)       
-                  });
+          response.arrayBuffer().then(audioData => {
+              AudioCtx.decodeAudioData(audioData).then(buffer => {
+                  this.source.buffer = buffer;          
               });
+          });
         },
 
         /**
@@ -153,35 +145,38 @@ export default {
           this.buttons[newState].state = true;
           this.audioState = newState;
         },
-
+      
         /**
-         * Starts playing the audio anew
+         * Starts playing the audio at given offset
          */
-        playAudio() {
+        playAudio(offset) {
           if (this.file !== null) {       
             if (this.audioState === EnumAudioStates.isPlaying) this.stopAudio();
-            else {
+            else {            
               this.loadAudio(this.file);
-              this.source.start(0);
+              window.console.log("playing audio at: " + offset);
+              this.source.start(0, offset);
+              if (offset === 0) this.startTime = performance.now();
               this.changeCurrentStateTo(EnumAudioStates.isPlaying);
               EventBus.$emit('to-crossFader', {audioNode: this.source, playerNr: this.playerNr});
-            }
-            
+            }         
           } else this.buttons[EnumAudioStates.isPlaying].state = false;
         },
 
         /**
          * Pauses the music or resumes it if it was paused 
          */
-        pauseMusic() {
-          if (this.audioState !== EnumAudioStates.isPaused) {
+        pauseAudio() {
+          if (this.file === null || this.audioState === EnumAudioStates.isStopped) this.buttons[EnumAudioStates.isPaused].state = false;
+          else if (this.audioState === EnumAudioStates.isPlaying) {
             //Pause audio
-            AudioCtx.suspend();
+            this.source.stop();
+            this.currentTime = performance.now();
             this.changeCurrentStateTo(EnumAudioStates.isPaused);
-          } else {
+          } else if (this.audioState === EnumAudioStates.isPaused) {
             //Resume audio
-            AudioCtx.resume();
-            this.changeCurrentStateTo(EnumAudioStates.isPlaying);
+            let pausedAt = (this.currentTime-this.startTime)/1000;
+            this.playAudio(pausedAt);
           }         
         },
 
@@ -189,12 +184,11 @@ export default {
          * Completely stops the audio, needs to be played anew
          */
         stopAudio() {
-          if (this.audioState !== EnumAudioStates.isStopped) {
+          if (this.file === null) this.buttons[EnumAudioStates.isStopped].state = false;
+          else if (this.audioState !== EnumAudioStates.isStopped) {
             this.source.stop(); 
-            if (this.audioState === EnumAudioStates.isPaused) AudioCtx.resume(); 
             this.changeCurrentStateTo(EnumAudioStates.isStopped)        
-          } else this.playAudio();
-          
+          } else this.playAudio(0);        
         },
         
         loadFile(file) {
