@@ -1,5 +1,5 @@
 <template>
-    <b-card id="card" bg-variant="light" class="text-center"> 
+    <b-card id="card" bg-variant="default" class="text-center"> 
       <div id="center-file-input-bar">
         <b-form-group label-for="file-small" label-size="sm">
         
@@ -203,6 +203,8 @@ export default {
 
 <style scoped>
 #card{
+  opacity: 0.8;
+  border-radius: 25px;
   width: 46%;
   height: 50%;
   float: left;

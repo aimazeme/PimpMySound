@@ -1,23 +1,24 @@
 <template>
-    <b-card id="card" bg-variant="light" class="text-center">
-        <div>
-            <b-list-group size="sm" >
-                <b-list-group-item id="songItem" v-bind:key="song.title" v-for="song in songs">
-                    {{ song.title }}
-                </b-list-group-item>
-
-            </b-list-group>
-        </div>
-        <b-button-group vertical>
+    <b-card id="card" bg-variant="default" class="text-center" style="opacity: 0.8">
+     
+        <b-button-group>
             <b-button id="putRight" @click="sendRight()" size="sm">Right Track
             </b-button>
             <b-button id="putLeft" @click="sendLeft()" size="sm">Left Track
             </b-button>
 
-    <b-form-file ref="fileinput"  v-on:change="fileChosen" v-model="file2" class="mt-3" plain></b-form-file>
+        <b-form-file ref="fileinput"  v-on:change="fileChosen" v-model="file" class="mt-3" plain></b-form-file>
             <b-button id="addTrack" size="sm" @click="addTrack()">Add Track
             </b-button>
-        </b-button-group>
+        </b-button-group>   
+        
+        <div>
+            <b-list-group id="songlist" size="sm" >
+                <b-list-group-item id="songItem" v-bind:key="song.title" v-for="song in songs">
+                    {{ song.title }}
+                </b-list-group-item>
+            </b-list-group>
+        </div>
     </b-card>
 </template>
 
@@ -31,7 +32,7 @@ export default {
     name: 'filelist',
     data () {
         return {
-            file2: null,
+            file: null,
             current: {},
             songs: [{
                     title: 'Monkey Island Theme',
@@ -56,11 +57,11 @@ export default {
                 window.console.log('sent right');
             },
             addTrack() {
-                if (this.file2) {
-                    window.console.log(this.file2)
+                if (this.file) {
+                    window.console.log(this.file)
                     var newSong = {
-                        title: this.file2.name,
-                        source: this.file2
+                        title: this.file.name,
+                        source: this.file
                     }
                     window.console.log(URL.createObjectURL(newSong))
                     newSong;
@@ -78,11 +79,18 @@ export default {
 
 <style scoped>
 #card{
-  width: 46%;
-  height: 50%;
+    border-radius: 25px;
+    width: 96%;
+    height: 50%;
   
-  margin-left: 25%;
-  margin-right: 25%; 
+    margin-left: 2%;
+    margin-right: 2%; 
+}
+
+#songlist{
+    width: 50%;
+    height: auto;
+    float: right;
 }
 
 </style>
