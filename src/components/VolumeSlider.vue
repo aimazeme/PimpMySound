@@ -1,13 +1,12 @@
 <template>
+    <b-card id="card" bg-variant="default" class="text-center"> 
     <div class="sliderContainer">
         
-        <input type="range" min="0" max= {sliderMaxValue} v-model="sliderValue" class="slider" v-on:input="adjustVolume">
-
-        <div>
-            <label class="sliderLabel">Volume</label>
-        </div>
-
+        <label for="volSlider" id="VolSlider" class="sliderLabel">Volume</label>
+        <input id="volSlider" type="range" min="0" max= {sliderMaxValue} v-model="sliderValue" class="slider" v-on:input="adjustVolume">
+        
     </div>
+    </b-card>
 </template>
 
 <script>
@@ -56,12 +55,25 @@ export default {
 </script>
 
 <style scoped>
+
+#VolSlider {
+    padding: 2px;
+    margin: 1px
+}
+
+#card {
+    border-radius: 25px;
+    width: 20%;
+    height: auto;
+    transform: rotate(270deg);
+
+    opacity: 0.8;
+
+    float: left;
+}
+
 .sliderContainer {
-   width: 46%;
-   height: 50%;
-   float: left;
-   margin-left: 2%;
-   margin-right: 2%; 
+    width: 100%;
 }
 
 .sliderLabel {
@@ -74,24 +86,22 @@ export default {
 
 .slider {
     -webkit-appearance: none;
-    margin-top: .5em;
-    width: 100%;
-    height: 15px;
-    border-radius: 5px;  
-    background: #d3d3d3;
-    outline: none;
-    opacity: 0.7;
-    -webkit-transition: .2s;
-    transition: opacity .2s;
+  width: 80%;                      
+  height: 15px;
+  border-radius: 5px;
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
 }
 
-.slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 25px;
-    height: 25px;
-    border-radius: 50%; 
-    background: rgb(143, 15, 58);
-    cursor: pointer;
+.slider::-moz-range-thumb {
+  width: 20px;
+  height: 40px;
+  border-radius: 5px;
+  background: rgb(105, 175, 175);
+  border-color: rgb(105, 175, 175);
+  cursor: pointer;
 }
 </style>

@@ -24,7 +24,6 @@
         </div>
         
         <div>
-            <b-label></b-label>
             <b-list-group id="songlist" size="sm" >
                 <b-list-group-item id="songItem" v-bind:key="song.title" v-for="song in songs">
                     {{ song.title }}

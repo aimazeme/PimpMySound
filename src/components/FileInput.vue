@@ -35,7 +35,6 @@
               {{ btn.caption }}
             </b-button>
           </b-button-group>
-          <p>Pressed States: <strong>{{ btnStates }}</strong></p>
 
         </b-form-group>
       </div> 
@@ -214,7 +213,7 @@ export default {
 #card {
   opacity: 0.8;
   border-radius: 25px;
-  width: 46%;
+  width: 40%;
   height: 50%;
   float: left;
   margin: 2%;

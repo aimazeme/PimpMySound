@@ -2,10 +2,10 @@
   <div id="app">
     <div class="bg">
     <PimpMySound msg="Welcome to Pimp My Sound"/>
-    <FileInput v-bind:playerNr="1"/>
-    <FileInput v-bind:playerNr="2"/>
+    <FileInput v-bind:playerNr="1"/>  
     <VolumeSlider v-bind:playerNr="1"/>
     <VolumeSlider v-bind:playerNr="2"/>
+    <FileInput v-bind:playerNr="2"/>
     <Filter filterType="lowshelf" v-bind:playerNr="1"/>
     <CrossFader/>   
     <FileList/>    
