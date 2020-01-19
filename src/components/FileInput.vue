@@ -16,6 +16,7 @@
           
           <b-form inline>
             <b-button
+              variant="danger"
               id="reset"
               size="sm"   
               @click="clearLeftFiles()" 
@@ -30,7 +31,7 @@
               :key="idx"
               :pressed.sync="btn.state"
               @click="execute(btn.caption)"
-              variant="secondary">
+              variant="outline-dark">
               {{ btn.caption }}
             </b-button>
           </b-button-group>
@@ -38,12 +39,14 @@
 
         </b-form-group>
       </div> 
+      <Filter/>
     </b-card>
 </template>
 
 <script>
 import { EventBus } from '../main';
 import { AudioCtx } from '../main';
+import Filter from './Filter.vue';
 
 /**
  * Audio States
@@ -60,7 +63,12 @@ const EnumAudioStates = {
 export default {
     name: 'FileInput',
     props: {
-      playerNr: Number
+      playerNr: Number,
+
+    },
+
+    components: {
+      Filter,
     },
 
     data: function() {
@@ -202,14 +210,14 @@ export default {
 </script>
 
 <style scoped>
-#card{
+
+#card {
   opacity: 0.8;
   border-radius: 25px;
   width: 46%;
   height: 50%;
   float: left;
-  margin-left: 2%;
-  margin-right: 2%; 
+  margin: 2%;
 }
 
 #file-input-bar {

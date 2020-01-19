@@ -1,13 +1,12 @@
 <template>
-    <div class="sliderContainer">
-        
-        <input type="range" min="0" max= {sliderMaxValue} v-model="sliderValue" class="slider" v-on:input="adjustCrossfading()">
+    <b-card id="card" bg-variant="light" class="text-center"> 
+            <div class="sliderContainer">
 
-        <div>
-            <label class="sliderLabel">CrossFader</label>
-        </div>
+                <label id="crossLabel" class="sliderLabel" for="crossfader"><strong>Crossfader</strong></label>
+                <input id="crossfader" type="range" min="0" max= {sliderMaxValue} v-model="sliderValue" class="slider" v-on:input="adjustCrossfading()">
 
-    </div>
+            </div>
+    </b-card>
 </template>
 
 <script>
@@ -78,6 +77,27 @@ export default {
 </script>
 
 <style scoped>
+
+#card {
+    border-radius: 25px;
+    width: 96%;
+    height: 40%;
+
+    opacity: 0.8;
+    margin-top: 2%;
+    margin-bottom: 2%;
+  
+    margin-left: 2%;
+    margin-right: 2%; 
+
+    padding: 1px;
+}
+
+#crossLabel {
+    padding: 15px;
+    margin: 10px
+}
+
 .sliderContainer {
     width: 100%;
 }
@@ -92,24 +112,22 @@ export default {
 
 .slider {
     -webkit-appearance: none;
-    margin-top: .5em;
-    width: 80%;
-    height: 15px;
-    border-radius: 5px;  
-    background: #d3d3d3;
-    outline: none;
-    opacity: 0.7;
-    -webkit-transition: .2s;
-    transition: opacity .2s;
+  width: 80%;                      
+  height: 15px;
+  border-radius: 5px;
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
 }
 
-.slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 25px;
-    height: 25px;
-    border-radius: 50%; 
-    background: rgb(143, 15, 58);
-    cursor: pointer;
+.slider::-moz-range-thumb {
+  width: 20px;
+  height: 40px;
+  border-radius: 5px;
+  background: rgb(105, 175, 175);
+  border-color: rgb(105, 175, 175);
+  cursor: pointer;
 }
 </style>
