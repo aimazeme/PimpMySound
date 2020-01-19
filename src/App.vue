@@ -4,9 +4,11 @@
     <PimpMySound msg="Welcome to Pimp My Sound"/>
     <FileInput v-bind:playerNr="1"/>
     <FileInput v-bind:playerNr="2"/>
+    <VolumeSlider v-bind:playerNr="1"/>
+    <VolumeSlider v-bind:playerNr="2"/>
+    <Filter filterType="lowshelf" v-bind:playerNr="1"/>
     <CrossFader/>   
-    <VolumeSlider/>
-    <FileList/>
+    <FileList/>    
     </div>
   </div>
 </template>
@@ -14,13 +16,15 @@
 <script>
 import PimpMySound from './components/PimpMySound.vue'
 import FileInput from './components/FileInput.vue'
+import VolumeSlider from './components/VolumeSlider.vue'
 import CrossFader from './components/Crossfader.vue'
 import FileList from './components/FileList.vue'
+import Filter from './components/Filter.vue'
 
 export default {
   name: 'app',
   components: {
-    PimpMySound, FileInput, CrossFader, FileList
+    PimpMySound, FileInput, VolumeSlider, CrossFader, FileList, Filter
   },
 };
 </script>
@@ -37,7 +41,6 @@ body {
 			background-attachment: fixed;
 			background-size:  cover;
 			background-color: #999;
-  
 }
 
 div, body{

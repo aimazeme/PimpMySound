@@ -16,22 +16,27 @@ import {AudioCtx} from '../main.js';
 
 export default {
     name: 'VolumeSlider',
+    props: {
+      playerNr: Number
+    },
     data() {
         
         return {
             sliderMaxValue: 100,
-            sliderValue: 100,
+            sliderValue: 0,
             gainNode: GainNode
         }     
     },
 
     created() {
         this.gainNode = AudioCtx.createGain();
-
-        EventBus.$on('to-volumeSlider', (audioNodeA) => {
-            audioNodeA.connect(this.gainNode);
-            window.console.log("Connected to: VolumeSlider");
-            EventBus.$emit('to-anotherAudioNode', this.gainNode);
+        this.gainNode.connect(AudioCtx.destination);
+        EventBus.$on('to-volumeSlider', (data) => {          
+            if (data.playerNr === this.playerNr) {
+                window.console.log("Connected Source " + data.playerNr + " to: VolumeSlider");
+                data.audioNode.connect(this.gainNode);
+                this.adjustVolume();                
+            }          
         });
 
         
@@ -39,6 +44,7 @@ export default {
 
     methods: {
         adjustVolume() {
+            window.console.log("adjusting volume");
             //Calculate new values with sliderValue (gain values are between 0..1)
             const PERCENTAGE = parseInt(this.sliderValue) / parseInt(this.sliderMaxValue);
 
