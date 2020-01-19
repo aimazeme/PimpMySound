@@ -35,22 +35,25 @@ export default {
             if (data.playerNr === 1) {
                 data.audioNode.connect(this.gainNode1); 
                 this.adjustCrossfading();
-                window.console.log("Source 1 connected to crossfader");
+                window.console.log("Source 1 connected to Crossfader");
+                EventBus.$emit('to-volumeSlider', {audioNode: this.gainNode1, playerNr: 1})
+                
             }          
             else {
                 data.audioNode.connect(this.gainNode2);  
                 this.adjustCrossfading();
                 window.console.log("Source 2 connected to crossfader");
+                EventBus.$emit('to-volumeSlider', {audioNode: this.gainNode2, playerNr: 2})                
             }                       
         });
 
         
     },
     
-    mounted() {
-        this.gainNode1.connect(AudioCtx.destination);
-        this.gainNode2.connect(AudioCtx.destination);
-    },
+    // mounted() {
+    //     this.gainNode1.connect(AudioCtx.destination);
+    //     this.gainNode2.connect(AudioCtx.destination);
+    // },
 
     methods: {
         adjustCrossfading() {
