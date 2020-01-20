@@ -9,6 +9,7 @@
     <Filter filterType="lowshelf" v-bind:playerNr="1"/>
     <CrossFader/>   
     <FileList/>    
+    <Soundtrack/>
     </div>
   </div>
 </template>
@@ -20,11 +21,12 @@ import VolumeSlider from './components/VolumeSlider.vue'
 import CrossFader from './components/Crossfader.vue'
 import FileList from './components/FileList.vue'
 import Filter from './components/Filter.vue'
+import Soundtrack from './components/Soundtrack.vue'
 
 export default {
   name: 'app',
   components: {
-    PimpMySound, FileInput, VolumeSlider, CrossFader, FileList, Filter
+    PimpMySound, FileInput, VolumeSlider, CrossFader, FileList, Filter, Soundtrack
   },
 };
 </script>
