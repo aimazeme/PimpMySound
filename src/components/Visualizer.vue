@@ -1,6 +1,10 @@
 <template>
    <div>
-       <canvas id="" width='500' height="500"></canvas>
+       <svg width="200" height="200">
+    <polygon :points="points"></polygon>
+    <circle cx="100" cy="100" r="90"></circle>
+  </svg>
+
    </div>
 </template>
 
@@ -32,6 +36,17 @@ export default {
 #visualCanvas {
     border: 1px solid;
     color: rgb(31, 71, 248);
+}
+svg { display: block; }
+polygon { fill: #41B883; }
+circle {
+  fill: transparent;
+  stroke: #35495E;
+}
+input[type="range"] {
+  display: block;
+  width: 100%;
+  margin-bottom: 15px;
 }
 
 </style>

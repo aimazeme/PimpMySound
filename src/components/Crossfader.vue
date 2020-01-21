@@ -19,7 +19,7 @@ export default {
         
         return {
             sliderMaxValue: 100,
-            sliderValue: 0,
+            sliderValue: 50,
             gainNode1: GainNode,
             gainNode2: GainNode,
             oneIsConnected: false

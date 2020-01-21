@@ -1,18 +1,18 @@
 <template>
     <div class="sliderContainer">
-        <input type="range" min="0" max= "50000" v-model="filterNode.frequency" class="slider">
+        <input type="range" min="0" max= "50000" v-model="this.filterNode.frequency" class="slider">
 
         <div>
             <label class="sliderLabel">Frequency</label>
         </div>
 
-        <input type="range" min="0" max= "50000" v-model="filterNode.Q" class="slider">
+        <input type="range" min="0" max= "50000" v-model="this.filterNode.Q" class="slider">
 
         <div>
             <label class="sliderLabel">Quality</label>
         </div>
 
-        <input type="range" min="0" max= "50000" v-model="filterNode.gain" class="slider">
+        <input type="range" min="0" max= "50000" v-model="this.filterNode.gain" class="slider">
 
         <div>
             <label class="sliderLabel">Gain</label>
@@ -25,7 +25,7 @@ import {EventBus} from '../main.js';
 import {AudioCtx} from '../main.js';
 
 export default {
-    name: 'Filter',
+    name: 'AudioFilter',
     props: {
       filterType: String,
       playerNr: Number,
