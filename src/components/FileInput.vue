@@ -121,6 +121,7 @@ export default {
         this.buttons[this.audioState].state = false;
         this.audioState = EnumAudioStates.isStopped;
         this.loadAudio(this.file);       
+        // EventBus.$emit("leftSongData",this.source)
       }
     },
 
