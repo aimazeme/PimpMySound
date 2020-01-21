@@ -44,15 +44,16 @@
           </b-button-group>
 
         </b-form-group>
+        
       </div> 
-      <Filter/>
+      <AudioFilter/>
     </b-card>
 </template>
 
 <script>
 import { EventBus } from '../main';
 import { AudioCtx } from '../main';
-import Filter from './Filter.vue';
+import AudioFilter from './AudioFilter.vue';
 
 /**
  * Audio States
@@ -73,7 +74,7 @@ export default {
     },
 
     components: {
-      Filter,
+      AudioFilter,
     },
 
     data: function() {
