@@ -25,7 +25,7 @@
             <p class="mt-3">Selected file: {{file ? file.name : ''}}</p>
           </b-form>
 
- <div class="sliderContainer">
+    <div class="sliderContainer" id="volSlideContainer">
         
         <label for="volSlider" id="VolSlider" class="sliderLabel">Volume</label>
         <input id="volSlider" type="range" min="0" max= {sliderMaxValue} v-model="sliderValue" class="slider" v-on:input="adjustVolume">
@@ -274,7 +274,7 @@ increasePlaybackRate(){
 #card {
   opacity: 0.8;
   border-radius: 25px;
-  width: 40%;
+  width: 46%;
   height: 50%;
   float: left;
   margin: 2%;
@@ -294,10 +294,9 @@ increasePlaybackRate(){
 }
 
 #VolSlider {
-    padding: 2px;
-    margin: 1px
+    padding: 10px;
+    margin: 5px;
 }
-
 
 .sliderContainer {
     width: 100%;
@@ -313,7 +312,7 @@ increasePlaybackRate(){
 
 .slider {
     -webkit-appearance: none;
-  width: 80%;                      
+  width: 50%;                      
   height: 15px;
   border-radius: 5px;
   background: #d3d3d3;
@@ -324,8 +323,8 @@ increasePlaybackRate(){
 }
 
 .slider::-moz-range-thumb {
-  width: 20px;
-  height: 40px;
+  width: 15px;
+  height: 25px;
   border-radius: 5px;
   background: rgb(105, 175, 175);
   border-color: rgb(105, 175, 175);

@@ -17,7 +17,16 @@
 
                 <b-button variant="outline-danger" id="putLeft" @click="sendLeft()" size="sm">Left Track</b-button>
                 <b-button variant="outline-info" id="putRight" @click="sendRight()" size="sm">Right Track</b-button>            
-                
+                <b-form inline>
+                    <b-button
+                        variant="danger"
+                        id="reset"
+                        size="sm"   
+                        @click="clearLeftFiles()" 
+                        class="mr-2">Reset
+                    </b-button>
+                    <p class="mt-3">Selected file: {{file ? file.name : ''}}</p>
+                </b-form>
                 <b-button variant="outline-secondary" id="addTrack" size="sm" @click="addTrack()">Add Track</b-button>
                 <b-button variant="danger" id="deleteTrack" size="sm">Delete Track</b-button>
             </b-form-group>
@@ -90,6 +99,8 @@ export default {
 </script>
 
 <style scoped>
+
+
 
 #deleteTrack {
     margin: 10px;

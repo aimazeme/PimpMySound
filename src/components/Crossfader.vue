@@ -126,8 +126,8 @@ export default {
 }
 
 .slider::-moz-range-thumb {
-  width: 20px;
-  height: 40px;
+  width: 15px;
+  height: 30px;
   border-radius: 5px;
   background: rgb(105, 175, 175);
   border-color: rgb(105, 175, 175);
