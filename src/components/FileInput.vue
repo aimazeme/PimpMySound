@@ -25,6 +25,13 @@
             <p class="mt-3">Selected file: {{file ? file.name : ''}}</p>
           </b-form>
 
+ <div class="sliderContainer">
+        
+        <label for="volSlider" id="VolSlider" class="sliderLabel">Volume</label>
+        <input id="volSlider" type="range" min="0" max= {sliderMaxValue} v-model="sliderValue" class="slider" v-on:input="adjustVolume">
+        
+    </div>
+
           <b-button-group id="btn-group" size="sm">
             <b-button
               v-for="(btn, idx) in buttons"
@@ -63,7 +70,6 @@ export default {
     name: 'FileInput',
     props: {
       playerNr: Number,
-
     },
 
     components: {
@@ -85,7 +91,10 @@ export default {
         audioState: EnumAudioStates.isStopped,
         startTime: Number,
         currentTime: Number,
-        songs: []
+        songs: [],
+           sliderMaxValue: 100,
+            sliderValue: 50,
+            gainNode: GainNode
       }
     }, 
     async mounted() {
@@ -93,7 +102,17 @@ export default {
       this.loadFile(file);
       });
     }, 
-
+    created() {
+        this.gainNode = AudioCtx.createGain();
+        this.gainNode.connect(AudioCtx.destination);
+        EventBus.$on('to-volumeSlider', (data) => {          
+            if (data.playerNr === this.playerNr) {
+                window.console.log("Connected Source " + data.playerNr + " to: VolumeSlider");
+                data.audioNode.connect(this.gainNode);
+                this.adjustVolume();                
+            }          
+        });  
+    },
     watch:{
       file: function(){       
         // Lädt den Buffer ins Audio
@@ -126,9 +145,33 @@ export default {
             case 'Stop':
               this.stopAudio()
               break;
-          }
+            case 'Forward':
+              this.increasePlaybackRate();
+                break;
+            case 'Backward':
+              this.decreasePlaybackRate();
+              break;
+          } 
         },
+increasePlaybackRate(){
+  if(this.buttons[EnumAudioStates.isForwarding].state === true){
+        this.source.playbackRate.value = 1.5;
+        this.buttons[EnumAudioStates.isBackwarding].state  = false;
+  } else {
+    this.source.playbackRate.value = 1;
+      this.buttons[EnumAudioStates.isForwarding].state  = false;
+  }       
+}, 
 
+  decreasePlaybackRate(){
+      if(this.buttons[EnumAudioStates.isBackwarding].state === true){
+        this.source.playbackRate.value = 0.5;
+        this.buttons[EnumAudioStates.isForwarding].state = false;
+  } else {
+    this.source.playbackRate.value = 1;
+        this.buttons[EnumAudioStates.isBackwarding].state  = false;
+  }   
+  },
         /**
          * Loads the audio file into the buffer
          * @param {"path to the audio file"} url
@@ -163,7 +206,15 @@ export default {
               this.loadAudio(this.file);
               window.console.log("playing audio at: " + offset);
               this.source.start(0, offset);
-              if (offset === 0) this.startTime = performance.now();
+              if(this.buttons[EnumAudioStates.isForwarding].state){
+                this.increasePlaybackRate();
+              }
+              if(this.buttons[EnumAudioStates.isBackwarding].state){
+                this.decreasePlaybackRate();
+              }
+              if (offset === 0) { 
+                this.startTime = performance.now(); 
+                } 
               this.changeCurrentStateTo(EnumAudioStates.isPlaying);
               EventBus.$emit('to-crossFader', {audioNode: this.source, playerNr: this.playerNr});
             }         
@@ -202,7 +253,15 @@ export default {
           if (file.target.files.length == 0) return;
           this.file = file;
           window.console.log(file.target.files[0]);
-        }
+        },
+        adjustVolume() {
+            window.console.log("adjusting volume");
+            //Calculate new values with sliderValue (gain values are between 0..1)
+            const PERCENTAGE = parseInt(this.sliderValue) / parseInt(this.sliderMaxValue);
+
+            //Exponential curve
+            this.gainNode.gain.value = PERCENTAGE * PERCENTAGE;
+        },
         
     }
 }
@@ -230,5 +289,44 @@ export default {
 
 #reset {
   float: left;
+}
+
+#VolSlider {
+    padding: 2px;
+    margin: 1px
+}
+
+
+.sliderContainer {
+    width: 100%;
+}
+
+.sliderLabel {
+    text-align: center;
+}
+
+.slider:hover {
+    opacity: 1;
+}
+
+.slider {
+    -webkit-appearance: none;
+  width: 80%;                      
+  height: 15px;
+  border-radius: 5px;
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+.slider::-moz-range-thumb {
+  width: 20px;
+  height: 40px;
+  border-radius: 5px;
+  background: rgb(105, 175, 175);
+  border-color: rgb(105, 175, 175);
+  cursor: pointer;
 }
 </style>
