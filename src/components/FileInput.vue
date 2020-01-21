@@ -46,7 +46,7 @@
         </b-form-group>
         
       </div> 
-      <AudioFilter/>
+      <AudioFilter id="afilter"/>
     </b-card>
 </template>
 
@@ -271,13 +271,17 @@ increasePlaybackRate(){
 
 <style scoped>
 
+#afilter {
+  margin-left: 1px
+}
+
 #card {
   opacity: 0.8;
   border-radius: 25px;
   width: 46%;
   height: 50%;
   float: left;
-  margin: 2%;
+  margin: 2% 2% 1%
 }
 
 #file-input-bar {
