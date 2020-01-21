@@ -1,6 +1,6 @@
 <template>
     <div class="sliderContainer">
-        <input type="range" min="0" max= "50000" v-model="this.filterNode.frequency" class="slider">
+        <!-- <input type="range" min="0" max= "50000" v-model="this.filterNode.frequency" class="slider">
 
         <div>
             <label class="sliderLabel">Frequency</label>
@@ -16,7 +16,14 @@
 
         <div>
             <label class="sliderLabel">Gain</label>
-        </div>
+        </div> -->
+
+        <circle-slider v-model="frequency" :side="50" ></circle-slider>
+         <div>Frequency: {{ frequency }}</div>
+            <circle-slider v-model="Q" :side="50" ></circle-slider>
+         <div>Quality: {{ Q }}</div>
+            <circle-slider v-model="gain" :side="50" ></circle-slider>
+         <div>Gain: {{ gain }}</div>
     </div>
 </template>
 
@@ -32,7 +39,11 @@ export default {
     },
     data() {
         return {
-            filterNode: AudioNode
+            filterNode: 100,
+            val1: 10,
+            frequency: 20,
+            gain: 40,
+            Q: 60,
         }     
     },
 

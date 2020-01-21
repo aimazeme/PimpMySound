@@ -12,7 +12,8 @@
     "bootstrap-icons": "^1.0.0-alpha2",
     "bootstrap-vue": "^2.1.0",
     "core-js": "^3.4.3",
-    "vue": "^2.6.10"
+    "vue": "^2.6.10",
+    "vue-circle-slider": "^1.0.2"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^4.1.0",
