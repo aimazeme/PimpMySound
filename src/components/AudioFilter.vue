@@ -1,29 +1,38 @@
 <template>
     <div class="sliderContainer">
-        <!-- <input type="range" min="0" max= "50000" v-model="this.filterNode.frequency" class="slider">
+    <div>
+        <b-button  id="FilterCollapse" v-b-toggle.collapse-1 variant="outline-info btn-block">Filter Away</b-button>
+        <b-collapse id="collapse-1" class="mt-2">
+            <b-card>
+                <b-form inline>
+                    <div id="freq" >
+                        <circle-slider v-model="frequency" :side="50" :min="0" :max="50000" :step-size="100"></circle-slider>
+                        <p for="freq">Frequency: {{ frequency }}</p>
+                    </div>
 
-        <div>
-            <label class="sliderLabel">Frequency</label>
-        </div>
+                    <div id="qual">
+                        <circle-slider v-model="Q" :side="50" :min="0" :max="50000" :step-size="100" ></circle-slider>
+                        <p for="qual">Quality: {{ Q }}</p>
+                    </div>
 
-        <input type="range" min="0" max= "50000" v-model="this.filterNode.Q" class="slider">
+                    <div id="gain">
+                        <circle-slider v-model="gain" :side="50" :min="0" :max="50000" :step-size="100"  ></circle-slider>
+                        <p for="gain">Gain: {{ gain }}</p>
+                    </div>
+                </b-form>
+            </b-card>
+        </b-collapse>
+    </div>
 
-        <div>
-            <label class="sliderLabel">Quality</label>
-        </div>
-
-        <input type="range" min="0" max= "50000" v-model="this.filterNode.gain" class="slider">
-
-        <div>
-            <label class="sliderLabel">Gain</label>
-        </div> -->
-
+<<<<<<< HEAD
         <circle-slider v-model="frequency" :side="50" :min="0" :max="50000" :step-size="100"></circle-slider>
          <div>Frequency: {{ frequency }}</div>
             <circle-slider v-model="Qval" :side="50" :min="0" :max="50000" :step-size="100" ></circle-slider>
          <div>Quality: {{ Qval }}</div>
             <circle-slider v-model="gain" :side="50" :min="0" :max="50000" :step-size="100"  ></circle-slider>
          <div>Gain: {{ gain }}</div>
+=======
+>>>>>>> 08157d13b21c988d8a36cbbe2221d9e949bb9cf9
     </div>
 </template>
 
@@ -82,6 +91,20 @@ export default {
 </script>
 
 <style scoped>
+
+#freq {
+    margin-left: 20%
+}
+
+#qual {
+    margin-left: 10%;
+    margin-right: 10%
+}
+
+#gain {
+    margin-right: 20%
+}
+
 .sliderContainer {
    width: 46%;
    height: 50%;
