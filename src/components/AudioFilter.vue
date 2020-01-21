@@ -20,8 +20,8 @@
 
         <circle-slider v-model="frequency" :side="50" :min="0" :max="50000" :step-size="100"></circle-slider>
          <div>Frequency: {{ frequency }}</div>
-            <circle-slider v-model="Q" :side="50" :min="0" :max="50000" :step-size="100" ></circle-slider>
-         <div>Quality: {{ Q }}</div>
+            <circle-slider v-model="Qval" :side="50" :min="0" :max="50000" :step-size="100" ></circle-slider>
+         <div>Quality: {{ Qval }}</div>
             <circle-slider v-model="gain" :side="50" :min="0" :max="50000" :step-size="100"  ></circle-slider>
          <div>Gain: {{ gain }}</div>
     </div>
@@ -39,18 +39,34 @@ export default {
     },
     data() {
         return {
-            filterNode: 100,
+            filterNode: AudioNode,
             val1: 10,
             frequency: 20,
             gain: 40,
-            Q: 60,
+            Qval: 60,
         }     
+    },
+    watch: {
+        Qval: function(){
+             this.filterNode.Q.value = this.Qval
+            window.console.log(this.Qval);
+        },
+        frequency: function(){
+             this.filterNode.frequency.value = this.frequency
+            window.console.log(this.frequency);
+        },
+         gain: function(){
+             this.filterNode.gain.value = this.gain
+            window.console.log(this.gain);
+        }
+        
     },
 
     created() {
         this.filterNode = AudioCtx.createBiquadFilter();
         this.filterNode.type = this.filterType;
 
+        window.console.log('filter created')
         EventBus.$on('to-filter', (data) => {  
             if (data.playerNr === this.playerNr) {
                 data.audioNode.connect(this.filterNode);
