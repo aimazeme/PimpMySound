@@ -11,8 +11,8 @@
                     </div>
 
                     <div id="qual">
-                        <circle-slider v-model="Q" :side="50" :min="0" :max="50000" :step-size="100" ></circle-slider>
-                        <p for="qual">Quality: {{ Q }}</p>
+                        <circle-slider v-model="Qval" :side="50" :min="0" :max="50000" :step-size="100" ></circle-slider>
+                        <p for="qual">Quality: {{ Qval }}</p>
                     </div>
 
                     <div id="gain">
@@ -23,16 +23,12 @@
             </b-card>
         </b-collapse>
     </div>
-
-<<<<<<< HEAD
         <circle-slider v-model="frequency" :side="50" :min="0" :max="50000" :step-size="100"></circle-slider>
          <div>Frequency: {{ frequency }}</div>
             <circle-slider v-model="Qval" :side="50" :min="0" :max="50000" :step-size="100" ></circle-slider>
          <div>Quality: {{ Qval }}</div>
             <circle-slider v-model="gain" :side="50" :min="0" :max="50000" :step-size="100"  ></circle-slider>
          <div>Gain: {{ gain }}</div>
-=======
->>>>>>> 08157d13b21c988d8a36cbbe2221d9e949bb9cf9
     </div>
 </template>
 
@@ -43,13 +39,14 @@ import {AudioCtx} from '../main.js';
 export default {
     name: 'AudioFilter',
     props: {
-      filterType: String,
-      playerNr: Number,
+        id: String,
+        filterType: String,
+        playerNr: Number,
+        nextComponent: String,
     },
     data() {
         return {
             filterNode: AudioNode,
-            val1: 10,
             frequency: 20,
             gain: 40,
             Qval: 60,
@@ -57,29 +54,24 @@ export default {
     },
     watch: {
         Qval: function(){
-             this.filterNode.Q.value = this.Qval
-            window.console.log(this.Qval);
+            this.filterNode.Q.value = this.Qval
         },
         frequency: function(){
-             this.filterNode.frequency.value = this.frequency
-            window.console.log(this.frequency);
+            this.filterNode.frequency.value = this.frequency
         },
-         gain: function(){
-             this.filterNode.gain.value = this.gain
-            window.console.log(this.gain);
-        }
-        
+        gain: function(){
+            this.filterNode.gain.value = this.gain
+        }         
     },
 
     created() {
         this.filterNode = AudioCtx.createBiquadFilter();
         this.filterNode.type = this.filterType;
-
-        window.console.log('filter created')
-        EventBus.$on('to-filter', (data) => {  
+        EventBus.$on('to-filter-' + this.filterType, (data) => {  
             if (data.playerNr === this.playerNr) {
+                window.console.log("Connected Source " + data.playerNr + " to: Filter " + this.filterType);
                 data.audioNode.connect(this.filterNode);
-                EventBus.$emit('to-nextComponent', {audioNode: this.filterNode, playerNr: this.playerNr});
+                EventBus.$emit('to-' + this.nextComponent, {audioNode: this.filterNode, playerNr: this.playerNr});
             }
         });
     },

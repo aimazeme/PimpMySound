@@ -33,14 +33,14 @@ export default {
             if (data.playerNr === 1) {
                 data.audioNode.connect(this.gainNode1); 
                 this.adjustCrossfading();
-                window.console.log("Source 1 connected to Crossfader");
+                window.console.log("Connected Source 1 to Crossfader");
                 EventBus.$emit('to-volumeSlider', {audioNode: this.gainNode1, playerNr: 1})
                 
             }          
             else {
                 data.audioNode.connect(this.gainNode2);  
                 this.adjustCrossfading();
-                window.console.log("Source 2 connected to crossfader");
+                window.console.log("Connected Source 2 to crossfader");
                 EventBus.$emit('to-volumeSlider', {audioNode: this.gainNode2, playerNr: 2})                
             }                       
         });
