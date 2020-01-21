@@ -18,11 +18,11 @@
             <label class="sliderLabel">Gain</label>
         </div> -->
 
-        <circle-slider v-model="frequency" :side="50" ></circle-slider>
+        <circle-slider v-model="frequency" :side="50" :min="0" :max="50000" :step-size="100"></circle-slider>
          <div>Frequency: {{ frequency }}</div>
-            <circle-slider v-model="Q" :side="50" ></circle-slider>
+            <circle-slider v-model="Q" :side="50" :min="0" :max="50000" :step-size="100" ></circle-slider>
          <div>Quality: {{ Q }}</div>
-            <circle-slider v-model="gain" :side="50" ></circle-slider>
+            <circle-slider v-model="gain" :side="50" :min="0" :max="50000" :step-size="100"  ></circle-slider>
          <div>Gain: {{ gain }}</div>
     </div>
 </template>
