@@ -48,6 +48,7 @@
 <script>
 import { EventBus } from '../main';
 import { AudioCtx } from '../main';
+import { AudioCtx2} from '../main';
 import AudioFilter from './AudioFilter.vue';
 import VolumeSlider from './VolumeSlider.vue';
 /**
@@ -83,6 +84,7 @@ export default {
           { caption: 'Stop', state: false },
           { caption: 'Forward', state: false }
         ],
+        audioContext: AudioContext,
         source: AudioBufferSourceNode,
         audioState: EnumAudioStates.isStopped,
         startTime: Number,
@@ -98,6 +100,11 @@ export default {
         window.console.log(midiData)
       })
     }, 
+
+    created() {
+      if (this.playerNr == 1) this.audioContext = AudioCtx;
+      else this.audioContext = AudioCtx2;
+    },
 
     watch:{
       file: function(){       
@@ -165,9 +172,9 @@ export default {
        * @param {"path to the audio file"} url
        */
       loadAudio(response) {
-        this.source = AudioCtx.createBufferSource(); 
+        this.source = this.audioContext.createBufferSource(); 
         response.arrayBuffer().then(audioData => {
-            AudioCtx.decodeAudioData(audioData).then(buffer => {
+            this.audioContext.decodeAudioData(audioData).then(buffer => {
                 this.source.buffer = buffer;          
             });
         });
@@ -200,9 +207,9 @@ export default {
             if(this.buttons[EnumAudioStates.isBackwarding].state){
               this.decreasePlaybackRate();
             }
-            if (offset === 0) { 
-              this.startTime = performance.now(); 
-              } 
+            // if (offset === 0) { 
+            //   this.startTime = performance.now(); 
+            // } 
             this.changeCurrentStateTo(EnumAudioStates.isPlaying);
             EventBus.$emit('to-filter-lowshelf', {audioNode: this.source, playerNr: this.playerNr});
           }         
@@ -216,13 +223,17 @@ export default {
         if (this.file === null || this.audioState === EnumAudioStates.isStopped) this.buttons[EnumAudioStates.isPaused].state = false;
         else if (this.audioState === EnumAudioStates.isPlaying) {
           //Pause audio
-          this.source.stop();
-          this.currentTime = performance.now();
+          // this.source.stop();
+          // this.currentTime = performance.now();
+          // this.changeCurrentStateTo(EnumAudioStates.isPaused);
+          this.audioContext.suspend();
           this.changeCurrentStateTo(EnumAudioStates.isPaused);
         } else if (this.audioState === EnumAudioStates.isPaused) {
           //Resume audio
-          let pausedAt = (this.currentTime-this.startTime)/1000;
-          this.playAudio(pausedAt);
+          // let pausedAt = (this.currentTime-this.startTime)/1000;
+          // this.playAudio(pausedAt);
+          this.audioContext.resume();
+          this.changeCurrentStateTo(EnumAudioStates.isPlaying);
         }         
       },
 

@@ -14,6 +14,7 @@ Vue.config.productionTip = false
 //Eventbus for communicating between components
 export const EventBus = new Vue();
 export const AudioCtx = new AudioContext();
+export const AudioCtx2 = new AudioContext();
 //------------------------------------------------------------------//
 
 new Vue({

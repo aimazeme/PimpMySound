@@ -10,6 +10,7 @@
 <script>
 import {EventBus} from '../main.js';
 import {AudioCtx} from '../main.js';
+import {AudioCtx2} from '../main';
 
 export default {
     name: 'VolumeSlider',
@@ -25,8 +26,15 @@ export default {
     },
 
     created() {
-        this.gainNode = AudioCtx.createGain();
-        this.gainNode.connect(AudioCtx.destination);
+        if (this.playerNr == 1) {
+            this.gainNode = AudioCtx.createGain();
+            this.gainNode.connect(AudioCtx.destination);
+        } 
+        else {
+            this.gainNode = AudioCtx2.createGain();
+            this.gainNode.connect(AudioCtx2.destination);
+        } 
+        
         EventBus.$on('to-volumeSlider', (data) => {                    
             if (data.playerNr === this.playerNr) {
                 window.console.log("Connected Source " + data.playerNr + " to: VolumeSlider");

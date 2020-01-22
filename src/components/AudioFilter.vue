@@ -30,6 +30,7 @@
 <script>
 import {EventBus} from '../main.js';
 import {AudioCtx} from '../main.js';
+import {AudioCtx2} from '../main';
 
 export default {
     name: 'AudioFilter',
@@ -60,7 +61,9 @@ export default {
     },
 
     created() {
-        this.filterNode = AudioCtx.createBiquadFilter();
+        if (this.playerNr == 1) this.filterNode = AudioCtx.createBiquadFilter();
+        else this.filterNode = AudioCtx2.createBiquadFilter();
+        
         this.filterNode.type = this.filterType;
         EventBus.$on('to-filter-' + this.filterType, (data) => {  
             if (data.playerNr === this.playerNr) {
