@@ -2,7 +2,6 @@
     <b-card id="card" bg-variant="light" class="text-center"> 
             <div class="sliderContainer">
 
-                <label id="crossLabel" class="sliderLabel" for="crossfader"><strong>Crossfader</strong></label>
                 <input id="crossfader" type="range" min="0" max= {sliderMaxValue} v-model="sliderValue" class="slider" v-on:input="adjustCrossfading()">
 
             </div>
@@ -34,14 +33,14 @@ export default {
             if (data.playerNr === 1) {
                 data.audioNode.connect(this.gainNode1); 
                 this.adjustCrossfading();
-                window.console.log("Source 1 connected to Crossfader");
+                window.console.log("Connected Source 1 to Crossfader");
                 EventBus.$emit('to-volumeSlider', {audioNode: this.gainNode1, playerNr: 1})
                 
             }          
             else {
                 data.audioNode.connect(this.gainNode2);  
                 this.adjustCrossfading();
-                window.console.log("Source 2 connected to crossfader");
+                window.console.log("Connected Source 2 to crossfader");
                 EventBus.$emit('to-volumeSlider', {audioNode: this.gainNode2, playerNr: 2})                
             }                       
         });
@@ -82,23 +81,18 @@ export default {
 <style scoped>
 
 #card {
-    border-radius: 25px;
+    border-radius: 15px;
     width: 96%;
     height: 40%;
 
     opacity: 0.8;
-    margin-top: 2%;
-    margin-bottom: 2%;
+    margin-top: 1%;
+    margin-bottom: 1%;
   
     margin-left: 2%;
     margin-right: 2%; 
 
     padding: 1px;
-}
-
-#crossLabel {
-    padding: 15px;
-    margin: 10px
 }
 
 .sliderContainer {
@@ -115,8 +109,8 @@ export default {
 
 .slider {
     -webkit-appearance: none;
-  width: 80%;                      
-  height: 15px;
+  width: 95%;                      
+  height: 10px;
   border-radius: 5px;
   background: #d3d3d3;
   outline: none;
@@ -126,8 +120,8 @@ export default {
 }
 
 .slider::-moz-range-thumb {
-  width: 20px;
-  height: 40px;
+  width: 15px;
+  height: 30px;
   border-radius: 5px;
   background: rgb(105, 175, 175);
   border-color: rgb(105, 175, 175);

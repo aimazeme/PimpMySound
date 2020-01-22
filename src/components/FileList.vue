@@ -16,10 +16,21 @@
                 </b-form-file> 
 
                 <b-button variant="outline-danger" id="putLeft" @click="sendLeft()" size="sm">Left Track</b-button>
+                <b-button variant="secondary" id="addTrack" size="sm" @click="addTrack()">Add Track</b-button>
                 <b-button variant="outline-info" id="putRight" @click="sendRight()" size="sm">Right Track</b-button>            
-                
-                <b-button variant="outline-secondary" id="addTrack" size="sm" @click="addTrack()">Add Track</b-button>
-                <b-button variant="danger" id="deleteTrack" size="sm">Delete Track</b-button>
+                <b-form inline>
+                    <b-form inline>
+                        <b-button
+                            variant="danger"
+                            id="reset"
+                            size="sm"   
+                            @click="clearLeftFiles()" 
+                            class="mr-2">Reset
+                        </b-button>
+                        <p class="mt-2">Selected file: {{file ? file.name : ''}}</p>
+                    </b-form>
+                     <b-button variant="danger" id="deleteTrack" size="sm">Delete Track</b-button>
+                </b-form>
             </b-form-group>
         </div>
         
@@ -34,7 +45,6 @@
 </template>
 
 <script>
-
 import {EventBus} from '../main.js';
 
 export default {
@@ -61,6 +71,9 @@ export default {
         }
         },
         methods: {
+            clearLeftFiles() {
+                this.$refs['file-input'].reset()
+            },
             sendLeft() {
                 window.console.log('sent left');
             },
@@ -91,13 +104,16 @@ export default {
 
 <style scoped>
 
-#deleteTrack {
-    margin: 10px;
-    float: right;
-}
-
 #addTrack {
     margin: 10px;
+}
+
+#reset {
+    margin: 10px;
+}
+
+#deleteTrack {
+    margin-left: 65%;
 }
 
 #putLeft {
