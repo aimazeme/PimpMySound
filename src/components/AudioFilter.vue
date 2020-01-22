@@ -23,16 +23,12 @@
             </b-card>
         </b-collapse>
     </div>
-<<<<<<< HEAD
-
-=======
         <circle-slider v-model="frequency" :side="50" :min="0" :max="50000" :step-size="100"></circle-slider>
          <div>Frequency: {{ frequency }}</div>
             <circle-slider v-model="Qval" :side="50" :min="0" :max="50000" :step-size="100" ></circle-slider>
          <div>Quality: {{ Qval }}</div>
             <circle-slider v-model="gain" :side="50" :min="0" :max="50000" :step-size="100"  ></circle-slider>
          <div>Gain: {{ gain }}</div>
->>>>>>> 0a049a50c43b0ee6b34e1cb25f86c9494bbe6ae1
     </div>
 </template>
 
