@@ -109,6 +109,10 @@ export default {
     watch:{
       file: function(){       
         // Lädt den Buffer ins Audio
+        if (this.audioContext.state === 'suspended') {
+          this.source.stop();
+          this.audioContext.resume();         
+        }
         if (this.audioState === EnumAudioStates.isPlaying) this.source.stop();
         this.buttons[this.audioState].state = false;
         this.audioState = EnumAudioStates.isStopped;
@@ -198,7 +202,7 @@ export default {
         if (this.file !== null) {       
           if (this.audioState === EnumAudioStates.isPlaying) this.stopAudio();
           else {            
-            this.loadAudio(this.file);
+            this.loadAudio(this.file);        
             window.console.log("playing audio at: " + offset);
             this.source.start(0, offset);
             if(this.buttons[EnumAudioStates.isForwarding].state){
