@@ -11,6 +11,7 @@
 <script>
 import {EventBus} from '../main.js';
 import {AudioCtx} from '../main.js';
+import {AudioCtx2} from '../main';
 
 export default {
     name: 'Crossfader',
@@ -27,7 +28,7 @@ export default {
 
     created() {
         this.gainNode1 = AudioCtx.createGain();
-        this.gainNode2 = AudioCtx.createGain();
+        this.gainNode2 = AudioCtx2.createGain();
 
         EventBus.$on('to-crossFader', (data) => {
             if (data.playerNr === 1) {
