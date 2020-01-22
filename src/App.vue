@@ -7,6 +7,7 @@
     <CrossFader/>   
     <FileList/>    
     <Soundtrack/>
+    <InputManager/>
     </div>
   </div>
 </template>
@@ -17,11 +18,12 @@ import FileInput from './components/FileInput.vue'
 import CrossFader from './components/Crossfader.vue'
 import FileList from './components/FileList.vue'
 import Soundtrack from './components/Soundtrack.vue'
+import InputManager from './components/InputManager.vue'
 
 export default {
   name: 'app',
   components: {
-    PimpMySound, FileInput, CrossFader, FileList, Soundtrack
+    PimpMySound, FileInput, CrossFader, FileList, Soundtrack, InputManager
   },
 };
 </script>

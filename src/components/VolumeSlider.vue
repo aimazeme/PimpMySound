@@ -33,7 +33,21 @@ export default {
                 data.audioNode.connect(this.gainNode);
                 this.adjustVolume();                
             }          
-        });       
+        }); 
+        EventBus.$on('midi-volumeLeft', (data) => {
+            if(this.playerNr === 1){
+            this.sliderValue =  data.btnValue / 127 * 100
+            window.console.log(this.sliderValue)
+            this.adjustVolume()
+            }
+        }); 
+        EventBus.$on('midi-volumeRight', (data) => {
+            if(this.playerNr === 2){
+            this.sliderValue =  data.btnValue / 127 * 100
+            window.console.log(this.sliderValue)
+            this.adjustVolume()
+            }
+        });      
     },
 
     methods: {

@@ -4,31 +4,26 @@
         <b-button  id="FilterCollapse" v-b-toggle.collapse-1 variant="outline-info btn-block">Filter Away</b-button>
         <b-collapse id="collapse-1" class="mt-2">
             <b-card>
+                <p> {{this.filterType}} Filter </p>
                 <b-form inline>
                     <div id="freq" >
-                        <circle-slider v-model="frequency" :side="50" :min="0" :max="50000" :step-size="100"></circle-slider>
+                        <circle-slider v-model="frequency" :side="50" :min="1" :max="100" :step-size="1"></circle-slider>
                         <p for="freq">Frequency: {{ frequency }}</p>
                     </div>
 
                     <div id="qual">
-                        <circle-slider v-model="Qval" :side="50" :min="0" :max="50000" :step-size="100" ></circle-slider>
+                        <circle-slider v-model="Qval" :side="50" :min="1" :max="100" :step-size="1" ></circle-slider>
                         <p for="qual">Quality: {{ Qval }}</p>
                     </div>
 
                     <div id="gain">
-                        <circle-slider v-model="gain" :side="50" :min="0" :max="50000" :step-size="100"  ></circle-slider>
+                        <circle-slider v-model="gain" :side="50" :min="1" :max="100" :step-size="1"  ></circle-slider>
                         <p for="gain">Gain: {{ gain }}</p>
                     </div>
                 </b-form>
             </b-card>
         </b-collapse>
     </div>
-        <circle-slider v-model="frequency" :side="50" :min="0" :max="50000" :step-size="100"></circle-slider>
-         <div>Frequency: {{ frequency }}</div>
-            <circle-slider v-model="Qval" :side="50" :min="0" :max="50000" :step-size="100" ></circle-slider>
-         <div>Quality: {{ Qval }}</div>
-            <circle-slider v-model="gain" :side="50" :min="0" :max="50000" :step-size="100"  ></circle-slider>
-         <div>Gain: {{ gain }}</div>
     </div>
 </template>
 
@@ -47,9 +42,9 @@ export default {
     data() {
         return {
             filterNode: AudioNode,
-            frequency: 20,
-            gain: 40,
-            Qval: 60,
+            frequency: 1,
+            gain: 1,
+            Qval: 1,
         }     
     },
     watch: {
@@ -85,7 +80,7 @@ export default {
 <style scoped>
 
 #freq {
-    margin-left: 20%
+    margin-left: 10%
 }
 
 #qual {
@@ -94,11 +89,11 @@ export default {
 }
 
 #gain {
-    margin-right: 20%
+    margin-right: 10%
 }
 
 .sliderContainer {
-   width: 46%;
+   width: 100%;
    height: 50%;
    float: left;
    margin-left: 2%;

@@ -41,7 +41,7 @@
         </b-form-group>
         
       </div> 
-      <AudioFilter id="afilter" filterType="highpass" nextComponent="crossFader" v-bind:playerNr="playerNr"/>
+      <AudioFilter id="afilter" filterType="lowshelf" nextComponent="crossFader" v-bind:playerNr="playerNr"/>
     </b-card>
 </template>
 
@@ -94,6 +94,9 @@ export default {
       EventBus.$on("fileChosen", file => {
       this.loadFile(file);
       });
+      EventBus.$on('midi', midiData => {
+        window.console.log(midiData)
+      })
     }, 
 
     watch:{
@@ -201,7 +204,7 @@ export default {
               this.startTime = performance.now(); 
               } 
             this.changeCurrentStateTo(EnumAudioStates.isPlaying);
-            EventBus.$emit('to-filter-highpass', {audioNode: this.source, playerNr: this.playerNr});
+            EventBus.$emit('to-filter-lowshelf', {audioNode: this.source, playerNr: this.playerNr});
           }         
         } else this.buttons[EnumAudioStates.isPlaying].state = false;
       },
