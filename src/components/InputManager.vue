@@ -10,7 +10,10 @@ const midiStates = [
   //Match the number with the button array indices
   { id: 48, property: 'volumeLeft' },  
   { id: 51, property: 'volumeRight' },  
-  { id: 64, property: 'crossfader' }
+  { id: 64, property: 'crossfader' },
+  { id: 18, property: 'speedLeft' },
+  { id: 21, property: 'speedRight' },
+  
 ];
 midiStates.forEach(entry => midiMap.set(entry.id,entry.property))
 
@@ -55,10 +58,11 @@ onMidiDevice(access) {
         let btnID = event.data[1];
         let btnValue = event.data[2];
 
-//  window.console.log(`cmd: ${cmd}, channel: ${channel}, btnID: ${btnID}, value: ${btnValue}`);
-      window.console.log('midi-' + midiMap.get(btnID))
+    // window.console.log(`cmd: ${cmd}, btnID: ${btnID}, value: ${btnValue}`);
+    //   window.console.log('midi-' + midiMap.get(btnID))
+      if(cmd === 11){
       EventBus.$emit('midi-' + midiMap.get(btnID), {cmd: cmd, btnID: btnID, btnValue: btnValue});
-       
+      }
     },
     mapMidi(btnID, callbackFn) {
         this.midiMapping.set(btnID, callbackFn);

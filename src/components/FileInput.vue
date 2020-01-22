@@ -96,9 +96,17 @@ export default {
       EventBus.$on("fileChosen", file => {
       this.loadFile(file);
       });
-      EventBus.$on('midi', midiData => {
-        window.console.log(midiData)
-      })
+      EventBus.$on('midi-speedLeft', midiData => {
+         if (this.playerNr == 1 && this.file != null){
+        this.changePlaybackRate(midiData.btnValue)
+         }
+      });
+          EventBus.$on('midi-speedRight', midiData => {
+         if (this.playerNr == 2 && this.file != null){
+        this.changePlaybackRate(midiData.btnValue)
+         }
+      });
+
     }, 
 
     created() {
@@ -150,7 +158,11 @@ export default {
             break;
         } 
       },
-
+      
+      changePlaybackRate(value){
+          this.source.playbackRate.value = value / 127 * 2
+      },
+  
       increasePlaybackRate(){
         if(this.buttons[EnumAudioStates.isForwarding].state === true){
         this.source.playbackRate.value = 1.5;
