@@ -24,15 +24,6 @@
         </b-collapse>
     </div>
 
-<<<<<<< HEAD
-        <circle-slider v-model="frequency" :side="50" :min="0" :max="50000" :step-size="100"></circle-slider>
-         <div>Frequency: {{ frequency }}</div>
-            <circle-slider v-model="Qval" :side="50" :min="0" :max="50000" :step-size="100" ></circle-slider>
-         <div>Quality: {{ Qval }}</div>
-            <circle-slider v-model="gain" :side="50" :min="0" :max="50000" :step-size="100"  ></circle-slider>
-         <div>Gain: {{ gain }}</div>
-=======
->>>>>>> 08157d13b21c988d8a36cbbe2221d9e949bb9cf9
     </div>
 </template>
 
