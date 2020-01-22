@@ -1,37 +1,39 @@
 <template>
-    <div>
+    <div id="xd">
             <canvas width="400" height="100" id='test'></canvas>
     </div>
 </template>
 
 <script>
 import {EventBus} from '../main.js';
+import { AudioCtx } from '../main';
 
 export default {
 
         data() {
         return {
             waveGradient: [[0, "255,255,255"], [0.7, "255,255,255"], [0.701, "229,229,229"], [1, "229,229,229"]],
-            data: AudioBufferSourceNode.buffer,
-            config: {
-				maxVal: 32678,
+            // data: AudioBufferSourceNode,
+            config: { 
+				maxVal: 36000,
 				linePercent: 0.7,
 				barWidth: 2,
 				gapWidth: 1
             },
-            cvs: document.getElementById('test')
-
+            cvs: document.getElementById('test'),
+            analyser: AudioCtx.createAnalyser(),
         }     
     },
 
     created(){
         EventBus.$on('leftSongData', (data) => {          
-            this.data= data;
-            this.drawWaveform(this.cvs, this.data, this.config);
+            // this.data.buffer = data;
+            window.console.log(data);
+            this.drawWaveform(this.data, this.config);
         }),
         EventBus.$on('rightSongData', (data) => {          
             this.data = data;
-            this.drawWaveform(this.cvs, this.data, this.config);
+            this.drawWaveform(this.data, this.config);
         })
     },
 
@@ -69,15 +71,18 @@ export default {
 			}
         },
         
-        drawWaveform(canvas,dataSamples,config){
+        drawWaveform(dataSamples,config){
+            window.console.log(dataSamples);
+            window.console.log(config);
+            var canvas = document.getElementById('test')
 			var c = canvas.getContext('2d');
-			var w = 0,
-				x = 0,
-				d = canvas.width,
-				g = config.linePercent * canvas.height,
-				gw = config.barWidth,
-				v = canvas.height - g,
-				r = dataSamples.length;
+			var w = 0;
+			var	x = 0;
+			var	d = canvas.width;
+			var	g = this.config.linePercent * canvas.height;
+			var	gw = this.config.barWidth;
+			var	v = canvas.height - g;
+			var	r = dataSamples.length;
 
 			var scaledSamples = this.memoizeScale(config.maxVal,dataSamples);
 
@@ -135,5 +140,7 @@ export default {
 </script>
 
 <style scoped>
-
+    #xd{
+        background: linear-gradient(135deg, rgb(95, 107, 155) 0%, rgb(18, 19, 27) 100%) no-repeat;
+    }
 </style>
