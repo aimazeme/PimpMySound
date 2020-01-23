@@ -82,7 +82,7 @@ export default {
 <style scoped>
 
 #freq {
-    margin-left: 10%
+    margin-left: 20%
 }
 
 #qual {
@@ -91,15 +91,14 @@ export default {
 }
 
 #gain {
-    margin-right: 10%
+    margin-right: 20%
 }
 
 .sliderContainer {
    width: 100%;
    height: 50%;
    float: left;
-   margin-left: 2%;
-   margin-right: 2%; 
+   margin-left: 0.5px;
 }
 
 .sliderLabel {

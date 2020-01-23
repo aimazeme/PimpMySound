@@ -41,7 +41,9 @@
                 v-bind:key="song.title" 
                 v-for="song in songs" 
                 variant="outline-dark"
-                v-on:click="chooseFile(song), checkMice(song.title)" >
+                v-on:click="chooseFile(song), 
+                checkMice(song.title)" 
+                button>
                     {{ song.title }}
                 </b-list-group-item>
             </b-list-group>
@@ -53,7 +55,6 @@
 import {EventBus} from '../main.js';
 
 export default {
-    
 
     name: 'filelist',
     data () {

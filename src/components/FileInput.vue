@@ -311,10 +311,6 @@ export default {
 
 <style scoped>
 
-#afilter {
-  margin-left: 1px
-}
-
 #card {
   opacity: 0.8;
   border-radius: 25px;
