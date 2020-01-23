@@ -1,146 +1,123 @@
 <template>
-    <div id="xd">
-            <canvas width="400" height="100" id='test'></canvas>
+    <div>
+    <canvas id="canvas"></canvas>
     </div>
 </template>
 
 <script>
-import {EventBus} from '../main.js';
+// import { EventBus } from '../main';
 import { AudioCtx } from '../main';
+// import { AudioCtx2} from '../main';
 
 export default {
+    name: 'Soundtrack',
 
-        data() {
-        return {
-            waveGradient: [[0, "255,255,255"], [0.7, "255,255,255"], [0.701, "229,229,229"], [1, "229,229,229"]],
-            // data: AudioBufferSourceNode,
-            config: { 
-				maxVal: 36000,
-				linePercent: 0.7,
-				barWidth: 2,
-				gapWidth: 1
-            },
-            cvs: document.getElementById('test'),
-            analyser: AudioCtx.createAnalyser(),
-        }     
+    props: {
+
+    },
+    date(){
+        return{
+            audioContext: new AudioContext(),
+        }
     },
 
     created(){
-        EventBus.$on('leftSongData', (data) => {          
-            // this.data.buffer = data;
-            window.console.log(data);
-            this.drawWaveform(this.data, this.config);
-        }),
-        EventBus.$on('rightSongData', (data) => {          
-            this.data = data;
-            this.drawWaveform(this.data, this.config);
-        })
+        // window.AudioContext = window.AudioContext || window.webkitAudioContext,
+        // this.audioContext = new AudioContext()
+
+        // EventBus.$on('leftSongData', (data) => {  
+
+            // if (data.playerNr === this.playerNr) {
+            // this.audioContext=AudioCtx;
+            // this.drawAudio(data.file);
+            // }
+        // });
+        // EventBus.$on('rightSongData', (data) => {     
+
+        // });
     },
+     
+    mounted () {
+       
+    },
+
 
     methods: {
-
-        canvasLinearGradient(canvasCtx,colorStops){
-
-			var l = canvasCtx.canvas.height; // Gradient Size
-			
-			var u = colorStops.map(function(stop){	
-				var opacity = stop.length === 3? stop[2]:1; 
-
-				return [stop[0],stop[1],opacity]
-			})
-
-			return u.reduce(function(e,stop){
-				var sValue	= stop[0],
-					color	= stop[1],
-					opacity = stop[2],
-					clr = "rgba("+color+","+opacity+")";
-
-				return e.addColorStop(sValue,clr),e;
-
-			},canvasCtx.createLinearGradient(0,0,0,l))
+        drawAudio(url){
+            fetch(url)
+            .then(response => response.arrayBuffer())
+            .then(arrayBuffer => AudioCtx.decodeAudioData(arrayBuffer))
+            .then(audioBuffer => this.draw(this.normalizeData(this.filterData(audioBuffer))));
         },
 
-        memoizeScale(max,data){
-			var m = [];
-			return function(v){
-				var s = data[v];
-				if(!m[s]){
-					m[s] = (max - data[v])/max;
-				}
-				return m[s];
-			}
+        filterData(audioBuffer) {
+            const rawData = audioBuffer.getChannelData(0); // We only need to work with one channel of data
+            const samples = 70; // Number of samples we want to have in our final data set
+            const blockSize = Math.floor(rawData.length / samples); // the number of samples in each subdivision
+            const filteredData = [];
+            for (let i = 0; i < samples; i++) {
+                let blockStart = blockSize * i; // the location of the first sample in the block
+                let sum = 0;
+                for (let j = 0; j < blockSize; j++) {
+                sum = sum + Math.abs(rawData[blockStart + j]); // find the sum of all the samples in the block
+                }
+                filteredData.push(sum / blockSize); // divide the sum by the block size to get the average
+            }
+            return filteredData;
         },
-        
-        drawWaveform(dataSamples,config){
-            window.console.log(dataSamples);
-            window.console.log(config);
-            var canvas = document.getElementById('test')
-			var c = canvas.getContext('2d');
-			var w = 0;
-			var	x = 0;
-			var	d = canvas.width;
-			var	g = this.config.linePercent * canvas.height;
-			var	gw = this.config.barWidth;
-			var	v = canvas.height - g;
-			var	r = dataSamples.length;
 
-			var scaledSamples = this.memoizeScale(config.maxVal,dataSamples);
-
-			var increment = config.barWidth + config.gapWidth
-
-			c.clearRect(0,0,canvas.width,canvas.height);
-			c.save();
-				c.beginPath();
-				for(var k = 0;k < d;k+= increment ){
-
-					var C = scaledSamples(((k / d) * r) | 0);
-					var T = (C  * g) | 0;
-					var S = ((1 - C ) * v + g) | 0;
-
-					//Draw Bar
-					c.rect( k,		// X
-							T,		// Y
-							gw,		// W
-							S-T);	// H
-
-					//Draw Gap
-					var A = Math.max(T, w)
-					c.fillStyle = "transparent"
-					c.fillRect(
-							k - config.gapWidth,	//X
-							A,						//Y
-							config.gapWidth,		//W
-							Math.min(S,x) - A)		//H
-
-					w = T
-					x = S
-				}
-			
-				c.fillStyle = this.canvasLinearGradient(c,this.waveGradient)
-				c.fill()
-				c.clearRect(0,g,d,1)
-			c.restore()
+        normalizeData(filteredData) {
+            const multiplier = Math.pow(Math.max(...filteredData), -1);
+            return filteredData.map(n => n * multiplier);
         },
-        
-        drawOverlay(canvas,fill,from,to){
-			var c = canvas.getContext('2d');
-			from = canvas.width * from;
-			to = canvas.width * to;
-			c.save()
-				c.fillStyle = fill;
-				c.globalCompositeOperation = "source-atop"
-				c.fillRect(from,0,Math.abs(from-to),canvas.height);
-			c.restore();
+
+        draw(normalizedData) {
+            // set up the canvas
+            const canvas = document.getElementById("canvas");    //querySelector("canvas");
+            const dpr = window.devicePixelRatio || 1;
+            const padding = 20;
+            canvas.width = canvas.offsetWidth * dpr;
+            canvas.height = (canvas.offsetHeight + padding * 2) * dpr;
+            const ctx = canvas.getContext("2d");
+            ctx.scale(dpr, dpr);
+            ctx.translate(0, canvas.offsetHeight / 2 + padding); // set Y = 0 to be in the middle of the canvas
+            // draw the line segments
+            const width = canvas.offsetWidth / normalizedData.length;
+            for (let i = 0; i < normalizedData.length; i++) {
+                const x = width * i;
+                let height = normalizedData[i] * canvas.offsetHeight - padding;
+                if (height < 0) {
+                    height = 0;
+                } else if (height > canvas.offsetHeight / 2) {
+                    height = height > canvas.offsetHeight / 2;
+                }
+                this.drawLineSegment(ctx, x, height, width, (i + 1) % 2);
+            }
         },
-        
-        
-        
-    },
+
+        drawLineSegment(ctx, x, height, width, isEven) {
+            ctx.lineWidth = 1; // how thick the line is
+            ctx.strokeStyle = "#fff"; // what color our line is
+            ctx.beginPath();
+            height = isEven ? height : -height;
+            ctx.moveTo(x, 0);
+            ctx.lineTo(x, height);
+            ctx.arc(x + width / 2, height, width / 2, Math.PI, 0, isEven);
+            ctx.lineTo(x + width, 0);
+            ctx.stroke();
+            window.console.log("drawww");
+        },
+
+    }
+
 }
 </script>
 
 <style scoped>
-    #xd{
-        background: linear-gradient(135deg, rgb(95, 107, 155) 0%, rgb(18, 19, 27) 100%) no-repeat;
-    }
+#canvas {
+    background: black;
+    width: 800px;
+    height: 130px;
+    margin: 2rem auto;
+}
 </style>
