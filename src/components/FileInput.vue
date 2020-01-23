@@ -94,20 +94,42 @@ export default {
     }, 
     async mounted() {
       EventBus.$on("fileChosen", file => {
-      this.loadFile(file);
+        this.loadFile(file);
       });
       EventBus.$on('midi-speedLeft', midiData => {
-         if (this.playerNr == 1 && this.file != null){
-        this.changePlaybackRate(midiData.btnValue)
-         }
+        if (this.playerNr == 1 && this.file != null) {
+          this.changePlaybackRate(midiData.btnValue)
+        }
       });
-          EventBus.$on('midi-speedRight', midiData => {
-         if (this.playerNr == 2 && this.file != null){
-        this.changePlaybackRate(midiData.btnValue)
-         }
+      EventBus.$on('midi-speedRight', midiData => {
+        if (this.playerNr == 2 && this.file != null) {
+          this.changePlaybackRate(midiData.btnValue)
+        }
       });
 
-    }, 
+        EventBus.$on('midi-playLeft', midiData => {
+        if (this.playerNr == 1 && this.file != null && midiData.btnValue === 0) {
+          this.playAudio(0);
+        }
+      });
+           EventBus.$on('midi-playRight', midiData => {
+        if (this.playerNr == 2 && this.file != null && midiData.btnValue === 0) {
+          this.playAudio(0);
+        }
+      });
+
+    EventBus.$on('midi-stopLeft', midiData => {
+      window.console.log("stop left")
+        if (this.playerNr == 1 && this.file != null && midiData.btnValue === 0) {
+          this.stopAudio();
+        }
+      });
+           EventBus.$on('midi-stopRight', midiData => {
+        if (this.playerNr == 2 && this.file != null && midiData.btnValue === 0) {
+          this.stopAudio();
+        }
+      });
+    },
 
     created() {
       if (this.playerNr == 1) this.audioContext = AudioCtx;

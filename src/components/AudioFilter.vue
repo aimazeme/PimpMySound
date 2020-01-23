@@ -1,10 +1,9 @@
 <template>
     <div class="sliderContainer">
     <div>
-        <b-button  id="FilterCollapse" v-b-toggle.collapse-1 variant="outline-info btn-block">Filter Away</b-button>
+        <b-button  id="FilterCollapse" v-b-toggle.collapse-1 variant="outline-info btn-block">{{this.filterType}} </b-button>
         <b-collapse id="collapse-1" class="mt-2">
             <b-card>
-                <p> {{this.filterType}} Filter </p>
                 <b-form inline>
                     <div id="freq" >
                         <circle-slider v-model="frequency" :side="50" :min="1" :max="100" :step-size="1"></circle-slider>

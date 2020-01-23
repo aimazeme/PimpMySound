@@ -12,7 +12,11 @@ const midiStates = [
   { id: 51, property: 'volumeRight' },  
   { id: 64, property: 'crossfader' },
   { id: 18, property: 'speedLeft' },
-  { id: 21, property: 'speedRight' },
+  { id: 21, property: 'speedRight' },  
+  { id: 19, property: 'playLeft' },
+  { id: 20, property: 'stopLeft' },
+  { id: 31, property: 'playRight' },
+  { id: 32, property: 'stopRight' },
   
 ];
 midiStates.forEach(entry => midiMap.set(entry.id,entry.property))
@@ -58,10 +62,14 @@ onMidiDevice(access) {
         let btnID = event.data[1];
         let btnValue = event.data[2];
 
-    // window.console.log(`cmd: ${cmd}, btnID: ${btnID}, value: ${btnValue}`);
+    window.console.log(`cmd: ${cmd}, btnID: ${btnID}, value: ${btnValue}`);
     //   window.console.log('midi-' + midiMap.get(btnID))
-      if(cmd === 11){
+      if(cmd === 11 ){
       EventBus.$emit('midi-' + midiMap.get(btnID), {cmd: cmd, btnID: btnID, btnValue: btnValue});
+      } 
+      else if ( cmd === 8 && (btnValue === 0 || btnValue === 127)){
+        EventBus.$emit('midi-' + midiMap.get(btnID), {cmd: cmd, btnID: btnID, btnValue: btnValue});
+     
       }
     },
     mapMidi(btnID, callbackFn) {
