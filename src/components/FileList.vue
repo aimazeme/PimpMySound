@@ -34,13 +34,18 @@
             </b-form-group>
         </div>
         
-        <div>
+        <!-- <div> -->
             <b-list-group id="songlist" size="sm" >
-                <b-list-group-item  id="songItem" v-bind:key="song.title" v-for="song in songs" v-on:click="chooseFile(song)"  >
+                <b-list-group-item 
+                id="songItem" 
+                v-bind:key="song.title" 
+                v-for="song in songs" 
+                variant="outline-dark"
+                v-on:click="chooseFile(song), checkMice(song.title)" >
                     {{ song.title }}
                 </b-list-group-item>
             </b-list-group>
-        </div>
+        <!-- </div> -->
     </b-card>
 </template>
 
@@ -53,6 +58,7 @@ export default {
     name: 'filelist',
     data () {
         return {
+            isHovering: false,
             file: null,
             selectedFile: null,
             index: -1,
@@ -83,26 +89,35 @@ export default {
                     this.index = 0;
                 }
                 }
-                window.console.log(this.index)
+                // window.console.log(this.index)
             } else if (data.btnValue === 63) {
                 //decrease
                 if (this.songs.length > 0) {
-                    window.console.log('Length:' + this.songs.length)
-                    if (this.index < this.songs.length - 1) {
-                        if (this.index == 0) {
-                            this.index = this.songs.length - 1
-                        } else {
-                            this.index -= 1;
-                        }
-                    } else {
-                        this.index = this.songs.length - 1;
-                    }
-                }
-                window.console.log(this.index)
+                   if(this.index > 0){
+                       this.index -= 1;
+                   } else if (this.index === 0){
+                       this.index = this.songs.length - 1
+                   }
+                } 
+                // window.console.log('Length: ' +  this.songs.length + ' ' + this.index)
             }
+            this.chooseFile(this.songs[this.index])
         })
+        EventBus.$on('midi-sendLeft', (data) => {
+            if(data.btnValue === 0){
+                this.sendLeft();
+            }
+        });
+        EventBus.$on('midi-sendRight', (data) => {
+            if(data.btnValue === 0){
+                this.sendRight();
+            }
+        });
     },
         methods: {
+            checkMice(yo){
+                window.console.log(yo)
+            },
             chooseFile(selectedFile){
                 this.selectedFile = selectedFile
                 // window.console.log(this.selectedFile)
@@ -184,6 +199,9 @@ export default {
     height: auto;
     float: right;
     padding: 20px
+}
+.hovering{
+  color: red
 }
 
 </style>

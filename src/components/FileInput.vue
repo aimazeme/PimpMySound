@@ -3,7 +3,7 @@
       <div id="center-file-input-bar">
         <b-form-group label-for="file-small" label-size="sm">
         
-          <b-form-file 
+          <!-- <b-form-file 
             class="mb-2"
             id="file-small" size="sm"
             accept=".wav, .mp3, .m4a"
@@ -12,18 +12,18 @@
             :state="Boolean(file)"
             placeholder="Choose a file or drop it here..."
             drop-placeholder="Drop file here..." >
-          </b-form-file> 
+          </b-form-file>  -->
           
-          <b-form inline>
-            <b-button
+          <!-- <b-form inline> -->
+            <!-- <b-button
               variant="danger"
               id="reset"
               size="sm"   
               @click="clearLeftFiles()" 
               class="mr-2">Reset
-            </b-button>
-            <p class="mt-3">Selected file: {{file ? file.name : ''}}</p>
-          </b-form>
+            </b-button> -->
+            <p class="mt-3"> {{file ? file.name : 'No track given'}}</p>
+          <!-- </b-form> -->
 
           <VolumeSlider v-bind:playerNr="playerNr"/>
 
