@@ -17,6 +17,9 @@ const midiStates = [
   { id: 20, property: 'stopLeft' },
   { id: 31, property: 'playRight' },
   { id: 32, property: 'stopRight' },
+  { id: 3, property: 'filechooser'},
+  { id: 16, property: 'sendLeft'},
+  { id: 17, property: 'sendRight'}
   
 ];
 midiStates.forEach(entry => midiMap.set(entry.id,entry.property))
@@ -40,7 +43,7 @@ export default {
     created() {
 
   navigator.requestMIDIAccess().then(this.onMidiDevice.bind(this));
-        window.addEventListener('keyup', this.onKeyboardEvent.bind(this));
+//         window.addEventListener('keyup', this.onKeyboardEvent.bind(this));
     
         this.midiMapping = new Map();
         this.keyboardMapping = new Map();
@@ -75,9 +78,7 @@ onMidiDevice(access) {
     mapMidi(btnID, callbackFn) {
         this.midiMapping.set(btnID, callbackFn);
     },
-    mapKeyboard(btnName, callbackFn) {
-        this.keyboardMapping.set(btnName, callbackFn);
-    }
+ 
     }
 }
 </script>

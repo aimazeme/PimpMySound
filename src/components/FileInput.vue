@@ -129,6 +129,19 @@ export default {
           this.stopAudio();
         }
       });
+
+        EventBus.$on('loadLeft', data => {
+          // window.console.log(data.source)
+        if (this.playerNr == 1) {
+          this.file = data.source;
+        }
+      });
+       EventBus.$on('loadRight', data => {
+          // window.console.log(data.source)
+        if (this.playerNr == 2) {
+          this.file = data.source;
+        }
+      });
     },
 
     created() {
@@ -139,6 +152,7 @@ export default {
     watch:{
       file: function(){       
         // Lädt den Buffer ins Audio
+        if(this.file !== null){
         if (this.audioContext.state === 'suspended') {
           this.source.stop();
           this.audioContext.resume();         
@@ -147,7 +161,7 @@ export default {
         this.buttons[this.audioState].state = false;
         this.audioState = EnumAudioStates.isStopped;
         this.loadAudio(this.file);       
-      }
+      }}
     },
 
     computed: {
