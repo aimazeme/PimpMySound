@@ -1,23 +1,34 @@
 <template>
     <div class="sliderContainer">
     <div>
-        <b-button  id="FilterCollapse" v-b-toggle.collapse-1 variant="outline-info btn-block">{{this.filterType}} </b-button>
+        <b-button  id="FilterCollapse" v-b-toggle.collapse-1 variant="outline-info btn-block">{{this.filterType.charAt(0).toUpperCase() + this.filterType.slice(1)}} </b-button>
         <b-collapse id="collapse-1" class="mt-2">
             <b-card>
                 <b-form inline>
+                    <div id="toggle">
+                        <label class="switch">
+                        <input type="checkbox" v-model="enabled">
+                        <span class="slider round"></span>
+                        </label>
+                    </div>
                     <div id="freq" >
                         <circle-slider v-model="frequency" :side="50" :min="1" :max="100" :step-size="1"></circle-slider>
                         <p for="freq">Frequency: {{ frequency }}</p>
                     </div>
 
                     <div id="qual">
-                        <circle-slider v-model="Qval" :side="50" :min="1" :max="100" :step-size="1" ></circle-slider>
-                        <p for="qual">Quality: {{ Qval }}</p>
+                        <div v-if="qualityEnabled"> 
+                            <circle-slider v-model="Qval" :side="50" :min="1" :max="100" :step-size="1" ></circle-slider>
+                            <p for="qual">Quality: {{ Qval }}</p>
+                        </div>
+                        
                     </div>
 
-                    <div id="gain">
-                        <circle-slider v-model="gain" :side="50" :min="1" :max="100" :step-size="1"  ></circle-slider>
-                        <p for="gain">Gain: {{ gain }}</p>
+                    <div id="gain" >
+                        <div v-if="gainEnabled">
+                            <circle-slider v-model="gain" :side="50" :min="1" :max="100" :step-size="1"  ></circle-slider>
+                            <p for="gain">Gain: {{ gain }}</p>
+                        </div>
                     </div>
                 </b-form>
             </b-card>
@@ -39,14 +50,20 @@ export default {
         playerNr: Number,
         nextComponent: String,
     },
+
     data() {
         return {
             filterNode: AudioNode,
             frequency: 1,
             gain: 1,
             Qval: 1,
+            enabled: true,
+            prevAudioNode: null,
+            gainEnabled: true,
+            qualityEnabled: true
         }     
     },
+
     watch: {
         Qval: function(){
             this.filterNode.Q.value = this.Qval
@@ -56,31 +73,76 @@ export default {
         },
         gain: function(){
             this.filterNode.gain.value = this.gain
-        }         
+            window.console.log(this.enabled);
+        },  
+        
+        enabled: function() {
+            if (this.prevAudioNode !== null) {
+                window.console.log(this.prevAudioNode);
+                if (this.enabled) window.console.log("Enabling Filter: " + this.filterType);
+                else window.console.log("Disabling Filter: " + this.filterType);
+                this.connect();
+            }       
+        }
     },
 
     created() {
+        //Create component fitting for the given filterType        
         if (this.playerNr == 1) this.filterNode = AudioCtx.createBiquadFilter();
         else this.filterNode = AudioCtx2.createBiquadFilter();
         
+        switch (this.filterType) {
+            case 'lowpass':
+            case 'highpass':
+            case 'bandpass': 
+            case 'notch': 
+            case 'allpass':
+                this.gainEnabled = false;
+                break;
+            case 'lowshelf':
+            case 'highshelf':
+                this.qualityEnabled = false;
+                break;
+            default:
+                this.qualityEnabled = true;
+                this.gainEnabled = true;
+        }
+
         this.filterNode.type = this.filterType;
         EventBus.$on('to-filter-' + this.filterType, (data) => {  
             if (data.playerNr === this.playerNr) {
-                window.console.log("Connected Source " + data.playerNr + " to: Filter " + this.filterType);
-                data.audioNode.connect(this.filterNode);
-                EventBus.$emit('to-' + this.nextComponent, {audioNode: this.filterNode, playerNr: this.playerNr});
+                this.prevAudioNode = data.audioNode;
+                this.connect();
+                // window.console.log("Connected Source " + data.playerNr + " to: Filter " + this.filterType);
+                // data.audioNode.connect(this.filterNode);
+                // EventBus.$emit('to-' + this.nextComponent, {audioNode: this.filterNode, playerNr: this.playerNr});
+                // this.prevAudioNode = data.audioNode;
             }
         });
     },
 
     methods: {
-
+        /**
+         * Connect the previous audioNode to this or the next audionode
+         * (Depends rather this filter is enabled)
+         */
+        connect() {
+            if (this.enabled) {
+                this.prevAudioNode.disconnect();
+                this.prevAudioNode.connect(this.filterNode);
+                window.console.log("Connected Source " + this.playerNr + " to: Filter " + this.filterType);            
+                EventBus.$emit('to-' + this.nextComponent, {audioNode: this.filterNode, playerNr: this.playerNr});
+            } else {
+                this.prevAudioNode.disconnect();
+                window.console.log("Connecting Source " + this.playerNr + " to: " + this.nextComponent);
+                EventBus.$emit('to-' + this.nextComponent, {audioNode: this.prevAudioNode, playerNr: this.playerNr});
+            }
+        },
     }
 }
 </script>
 
 <style scoped>
-
 #freq {
     margin-left: 20%
 }
@@ -94,42 +156,64 @@ export default {
     margin-right: 20%
 }
 
-.sliderContainer {
-   width: 100%;
-   height: 50%;
-   float: left;
-   margin-left: 0.5px;
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
 }
 
-.sliderLabel {
-    text-align: center;
-}
-
-.slider:hover {
-    opacity: 1;
+.switch input { 
+  opacity: 0;
+  width: 0;
+  height: 0;
 }
 
 .slider {
-    -webkit-appearance: none;
-    margin-top: .5em;
-    width: 100%;
-    height: 15px;
-    border-radius: 5px;  
-    background: #d3d3d3;
-    outline: none;
-    opacity: 0.7;
-    -webkit-transition: .2s;
-    transition: opacity .2s;
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
 }
 
-.slider::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 25px;
-    height: 25px;
-    border-radius: 50%; 
-    background: rgb(143, 15, 58);
-    cursor: pointer;
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
 }
 </style>
 
