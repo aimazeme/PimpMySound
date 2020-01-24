@@ -3,27 +3,7 @@
       <div id="center-file-input-bar">
         <b-form-group label-for="file-small" label-size="sm">
         
-          <!-- <b-form-file 
-            class="mb-2"
-            id="file-small" size="sm"
-            accept=".wav, .mp3, .m4a"
-            v-model="file"
-            ref="file-input"
-            :state="Boolean(file)"
-            placeholder="Choose a file or drop it here..."
-            drop-placeholder="Drop file here..." >
-          </b-form-file>  -->
-          
-          <!-- <b-form inline> -->
-            <!-- <b-button
-              variant="danger"
-              id="reset"
-              size="sm"   
-              @click="clearLeftFiles()" 
-              class="mr-2">Reset
-            </b-button> -->
-            <p class="mt-3"> {{file ? file.name : 'No track given'}}</p>
-          <!-- </b-form> -->
+          <p class="mt-3"> {{file ? file.name : 'No track given'}}</p>
 
           <VolumeSlider v-bind:playerNr="playerNr"/>
 
@@ -134,13 +114,11 @@ export default {
       });
 
         EventBus.$on('loadLeft', data => {
-          // window.console.log(data.source)
         if (this.playerNr == 1) {
           this.file = data.source;
         }
       });
        EventBus.$on('loadRight', data => {
-          // window.console.log(data.source)
         if (this.playerNr == 2) {
           this.file = data.source;
         }
@@ -174,10 +152,6 @@ export default {
     },
 
     methods: {
-      // clearLeftFiles() {
-      //   this.$refs['file-input'].reset()
-      // },
-
       /**
        * Map functions to buttons
        */
@@ -288,16 +262,9 @@ export default {
       pauseAudio() {
         if (this.file === null || this.audioState === EnumAudioStates.isStopped) this.buttons[EnumAudioStates.isPaused].state = false;
         else if (this.audioState === EnumAudioStates.isPlaying) {
-          //Pause audio
-          // this.source.stop();
-          // this.currentTime = performance.now();
-          // this.changeCurrentStateTo(EnumAudioStates.isPaused);
           this.audioContext.suspend();
           this.changeCurrentStateTo(EnumAudioStates.isPaused);
         } else if (this.audioState === EnumAudioStates.isPaused) {
-          //Resume audio
-          // let pausedAt = (this.currentTime-this.startTime)/1000;
-          // this.playAudio(pausedAt);
           this.audioContext.resume();
           this.changeCurrentStateTo(EnumAudioStates.isPlaying);
         }         

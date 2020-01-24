@@ -73,12 +73,10 @@ export default {
         },
         gain: function(){
             this.filterNode.gain.value = this.gain
-            window.console.log(this.enabled);
         },  
         
         enabled: function() {
             if (this.prevAudioNode !== null) {
-                window.console.log(this.prevAudioNode);
                 if (this.enabled) window.console.log("Enabling Filter: " + this.filterType);
                 else window.console.log("Disabling Filter: " + this.filterType);
                 this.connect();
@@ -113,10 +111,6 @@ export default {
             if (data.playerNr === this.playerNr) {
                 this.prevAudioNode = data.audioNode;
                 this.connect();
-                // window.console.log("Connected Source " + data.playerNr + " to: Filter " + this.filterType);
-                // data.audioNode.connect(this.filterNode);
-                // EventBus.$emit('to-' + this.nextComponent, {audioNode: this.filterNode, playerNr: this.playerNr});
-                // this.prevAudioNode = data.audioNode;
             }
         });
     },
