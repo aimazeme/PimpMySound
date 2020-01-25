@@ -92,7 +92,13 @@ export default {
 
         EventBus.$on('midi-playLeft', midiData => {
         if (this.playerNr == 1 && this.file != null && midiData.btnValue === 0) {
+          if(this.audioState === EnumAudioStates.isPlaying){
+            this.pauseAudio()
+          } else if(this.audioState === EnumAudioStates.isPaused){
+            this.pauseAudio()
+          } else if(this.audioState === EnumAudioStates.isStopped) {
           this.playAudio(0);
+          }
         }
       });
            EventBus.$on('midi-playRight', midiData => {
@@ -134,9 +140,9 @@ export default {
       file: function(){       
         // Lädt den Buffer ins Audio
         if(this.file !== null){
-        if (this.audioContext.state === 'suspended') {
-          this.source.stop();
-          this.audioContext.resume();         
+        if (this.audioState === EnumAudioStates.isPaused) {
+          this.audioContext.resume();      
+          this.source.stop();   
         }
         if (this.audioState === EnumAudioStates.isPlaying) this.source.stop();
         this.buttons[this.audioState].state = false;

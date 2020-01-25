@@ -37,14 +37,16 @@
         <!-- <div> -->
             <b-list-group id="songlist" size="sm" >
                 <b-list-group-item 
-                id="songItem" 
+                id="song.title" 
                 v-bind:key="song.title" 
                 v-for="song in songs" 
                 variant="outline-dark"
-                v-on:click="chooseFile(song), 
-                checkMice(song.title)" 
+                v-on:click="chooseFile(song)" 
                 button>
-                    {{ song.title }}
+                <b-badge v-if="selectedFile && selectedFile.title === song.title" 
+                pill>
+                 {{ song.title }} </b-badge>
+                <div v-else=""> {{song.title}}  </div>
                 </b-list-group-item>
             </b-list-group>
         <!-- </div> -->
@@ -64,18 +66,6 @@ export default {
             selectedFile: null,
             index: -1,
             songs: [
-                // {
-                //     title: 'Monkey Island Theme',
-                //     source: require('../audio/Monkey Island Theme.mp3')
-                // },
-                // {
-                //     title: 'Super Mario Bros Theme Song',
-                //     source: require('../audio/Super Mario Bros Theme Song.mp3')
-                // },
-                // {
-                //     title: 'Wartemusik',
-                //     source: require('../audio/Wartemusik.mp3')
-                // },
             ],
         }
         },
@@ -89,8 +79,8 @@ export default {
                 } else {
                     this.index = 0;
                 }
+                 window.console.log(this.songs[this.index].title)
                 }
-                // window.console.log(this.index)
             } else if (data.btnValue === 63) {
                 //decrease
                 if (this.songs.length > 0) {
@@ -102,7 +92,9 @@ export default {
                 } 
                 // window.console.log('Length: ' +  this.songs.length + ' ' + this.index)
             }
+            if(this.songs.length > 0){
             this.chooseFile(this.songs[this.index])
+            }
         })
         EventBus.$on('midi-sendLeft', (data) => {
             if(data.btnValue === 0){
@@ -121,7 +113,16 @@ export default {
             },
             chooseFile(selectedFile){
                 this.selectedFile = selectedFile
-                // window.console.log(this.selectedFile)
+                var counter = 0;
+
+                for(const song in this.songs){
+                    
+                    if(song.title === selectedFile.title){
+                        this.index = counter;
+                        break
+                    }
+                    counter++
+                }
             },
             clearLeftFiles() {
                 this.$refs['file-input'].reset()
