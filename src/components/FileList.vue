@@ -129,7 +129,7 @@ export default {
             },
             sendLeft() {
                 if(this.selectedFile){
-                EventBus.$emit('loadLeft', this.selectedFile )
+                EventBus.$emit('loadLeft', this.selectedFile)
                 window.console.log('Send to left');
                 }
             },
