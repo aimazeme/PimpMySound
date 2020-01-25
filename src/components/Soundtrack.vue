@@ -1,26 +1,28 @@
 <template>
     <div>
         <b-card id="visualizer" bg-variant="light" class="text-center">
-            <canvas v-bind:id="'canvas'+playerNr" width="1100" height="40" ></canvas>
+            <canvas v-bind:id="'canvas'+playerNr" width="1100" height="40"></canvas>
         </b-card>
     </div>
 </template>
 
 <script>
 import { EventBus } from '../main';
+
 export default {
     name: 'Soundtrack',
 
     props: {
         playerNr: Number,
     },
-    date(){
-        return{
-            data: null
+
+    data() {
+        return {
+            data: null,
         }
     },
 
-    created(){
+    created() {
         EventBus.$on('SongData', (data) => {
             if (this.playerNr==data.playerNr){   
             this.data = data.buffer;
@@ -33,7 +35,6 @@ export default {
         drawAudio(buffer){
             this.draw(this.normalizeData(this.filterData(buffer)));
         },
-
 /*
     Filtern des Buffers auf einen Channel und Genauigkeit der Visualisierung einstellen indem man in Samples teilt. 
 */
@@ -100,8 +101,7 @@ export default {
             ctx.stroke();
         },
 
-    }
-
+    },
 }
 </script>
 
