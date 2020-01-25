@@ -3,27 +3,7 @@
       <div id="center-file-input-bar">
         <b-form-group label-for="file-small" label-size="sm">
         
-          <b-form-file 
-            class="mb-2"
-            id="file-small" size="sm"
-            accept=".wav, .mp3, .m4a"
-            v-model="file"
-            ref="file-input"
-            :state="Boolean(file)"
-            placeholder="Choose a file or drop it here..."
-            drop-placeholder="Drop file here..." >
-          </b-form-file> 
-          
-          <b-form inline>
-            <b-button
-              variant="danger"
-              id="reset"
-              size="sm"   
-              @click="clearLeftFiles()" 
-              class="mr-2">Reset
-            </b-button>
-            <p class="mt-3">Selected file: {{file ? file.name : ''}}</p>
-          </b-form>
+          <p class="mt-3"> {{file ? file.name : 'No track given'}}</p>
 
           <VolumeSlider v-bind:playerNr="playerNr"/>
 
@@ -41,7 +21,9 @@
         </b-form-group>
         
       </div> 
-      <AudioFilter id="afilter" filterType="lowshelf" nextComponent="crossFader" v-bind:playerNr="playerNr"/>
+      <AudioFilter id="afilter" filterType="lowshelf" nextComponent="filter-peaking" v-bind:playerNr="playerNr"/>
+      <AudioFilter id="afilter" filterType="peaking" nextComponent="filter-highshelf" v-bind:playerNr="playerNr"/>
+      <AudioFilter id="afilter" filterType="highshelf" nextComponent="crossFader" v-bind:playerNr="playerNr"/>
     </b-card>
 </template>
 
@@ -56,11 +38,11 @@ import VolumeSlider from './VolumeSlider.vue';
  */
 const EnumAudioStates = {
   //Match the number with the button array indices
-  isBackwarding: 0,  
+  isSlowedDown: 0,  
   isPaused: 1,
   isPlaying: 2,
   isStopped: 3,
-  isForwarding: 4
+  isPacedUp: 4
 };
 
 export default {
@@ -78,11 +60,11 @@ export default {
         file: null,
         myToggle: false,
         buttons: [
-          { caption: 'Backward', state: false },
+          { caption: 'x0.5', state: false },
           { caption: 'Pause', state: false },
           { caption: 'Play', state: false },
           { caption: 'Stop', state: false },
-          { caption: 'Forward', state: false }
+          { caption: 'x1.5', state: false }
         ],
         audioContext: AudioContext,
         source: AudioBufferSourceNode,
@@ -92,6 +74,7 @@ export default {
         songs: [],
       }
     }, 
+    
     async mounted() {
       EventBus.$on("fileChosen", file => {
         this.loadFile(file);
@@ -129,6 +112,17 @@ export default {
           this.stopAudio();
         }
       });
+
+        EventBus.$on('loadLeft', data => {
+        if (this.playerNr == 1) {
+          this.file = data.source;
+        }
+      });
+       EventBus.$on('loadRight', data => {
+        if (this.playerNr == 2) {
+          this.file = data.source;
+        }
+      });
     },
 
     created() {
@@ -139,6 +133,7 @@ export default {
     watch:{
       file: function(){       
         // Lädt den Buffer ins Audio
+        if(this.file !== null){
         if (this.audioContext.state === 'suspended') {
           this.source.stop();
           this.audioContext.resume();         
@@ -147,7 +142,7 @@ export default {
         this.buttons[this.audioState].state = false;
         this.audioState = EnumAudioStates.isStopped;
         this.loadAudio(this.file);       
-      }
+      }}
     },
 
     computed: {
@@ -157,10 +152,9 @@ export default {
     },
 
     methods: {
-      clearLeftFiles() {
-        this.$refs['file-input'].reset()
-      },
-
+      /**
+       * Map functions to buttons
+       */
       execute(state) {
         switch (state) {
           case 'Play':
@@ -172,36 +166,45 @@ export default {
           case 'Stop':
             this.stopAudio()
             break;
-          case 'Forward':
+          case 'x1.5':
             this.increasePlaybackRate();
               break;
-          case 'Backward':
+          case 'x0.5':
             this.decreasePlaybackRate();
             break;
         } 
       },
       
+      /**
+       * Change the playbackRate to the given midi value in percentage
+       */
       changePlaybackRate(value){
           this.source.playbackRate.value = value / 127 * 2
       },
-  
+
+      /**
+       * Increase the playbackRate to 1.5 if enabled else to 1
+       */
       increasePlaybackRate(){
-        if(this.buttons[EnumAudioStates.isForwarding].state === true){
+        if(this.buttons[EnumAudioStates.isPacedUp].state === true){
         this.source.playbackRate.value = 1.5;
-        this.buttons[EnumAudioStates.isBackwarding].state  = false;
+        this.buttons[EnumAudioStates.isSlowedDown].state  = false;
         } else {
           this.source.playbackRate.value = 1;
-          this.buttons[EnumAudioStates.isForwarding].state  = false;
+          this.buttons[EnumAudioStates.isPacedUp].state  = false;
         }       
       }, 
 
+      /**
+       * Slow down the playbackRate to 0.5 if enabled else to 1
+       */
       decreasePlaybackRate(){
-        if(this.buttons[EnumAudioStates.isBackwarding].state === true){
+        if(this.buttons[EnumAudioStates.isSlowedDown].state === true){
         this.source.playbackRate.value = 0.5;
-        this.buttons[EnumAudioStates.isForwarding].state = false;
+        this.buttons[EnumAudioStates.isPacedUp].state = false;
         } else {
           this.source.playbackRate.value = 1;
-          this.buttons[EnumAudioStates.isBackwarding].state  = false;
+          this.buttons[EnumAudioStates.isSlowedDown].state  = false;
         }   
       },
 
@@ -237,12 +240,11 @@ export default {
           if (this.audioState === EnumAudioStates.isPlaying) this.stopAudio();
           else {            
             this.loadAudio(this.file);        
-            window.console.log("playing audio at: " + offset);
             this.source.start(0, offset);
-            if(this.buttons[EnumAudioStates.isForwarding].state){
+            if(this.buttons[EnumAudioStates.isPacedUp].state){
               this.increasePlaybackRate();
             }
-            if(this.buttons[EnumAudioStates.isBackwarding].state){
+            if(this.buttons[EnumAudioStates.isSlowedDown].state){
               this.decreasePlaybackRate();
             }
             // if (offset === 0) { 
@@ -260,16 +262,9 @@ export default {
       pauseAudio() {
         if (this.file === null || this.audioState === EnumAudioStates.isStopped) this.buttons[EnumAudioStates.isPaused].state = false;
         else if (this.audioState === EnumAudioStates.isPlaying) {
-          //Pause audio
-          // this.source.stop();
-          // this.currentTime = performance.now();
-          // this.changeCurrentStateTo(EnumAudioStates.isPaused);
           this.audioContext.suspend();
           this.changeCurrentStateTo(EnumAudioStates.isPaused);
         } else if (this.audioState === EnumAudioStates.isPaused) {
-          //Resume audio
-          // let pausedAt = (this.currentTime-this.startTime)/1000;
-          // this.playAudio(pausedAt);
           this.audioContext.resume();
           this.changeCurrentStateTo(EnumAudioStates.isPlaying);
         }         
@@ -286,6 +281,9 @@ export default {
         } else this.playAudio(0);        
       },
       
+      /**
+       * Load a given file into this.property file
+       */
       loadFile(file) {
         if (file.target.files.length == 0) return;
         this.file = file;
@@ -296,10 +294,6 @@ export default {
 </script>
 
 <style scoped>
-
-#afilter {
-  margin-left: 1px
-}
 
 #card {
   opacity: 0.8;

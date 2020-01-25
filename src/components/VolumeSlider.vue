@@ -60,8 +60,10 @@ export default {
     },
 
     methods: {
+        /**
+         * Adjust the gainNode gain value to the slider value
+         */
         adjustVolume() {
-            window.console.log("adjusting volume");
             //Calculate new values with sliderValue (gain values are between 0..1)
             const PERCENTAGE = parseInt(this.sliderValue) / parseInt(this.sliderMaxValue);
 

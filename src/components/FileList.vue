@@ -34,13 +34,20 @@
             </b-form-group>
         </div>
         
-        <div>
+        <!-- <div> -->
             <b-list-group id="songlist" size="sm" >
-                <b-list-group-item id="songItem" v-bind:key="song.title" v-for="song in songs">
+                <b-list-group-item 
+                id="songItem" 
+                v-bind:key="song.title" 
+                v-for="song in songs" 
+                variant="outline-dark"
+                v-on:click="chooseFile(song), 
+                checkMice(song.title)" 
+                button>
                     {{ song.title }}
                 </b-list-group-item>
             </b-list-group>
-        </div>
+        <!-- </div> -->
     </b-card>
 </template>
 
@@ -48,52 +55,99 @@
 import {EventBus} from '../main.js';
 
 export default {
-    
 
     name: 'filelist',
     data () {
         return {
+            isHovering: false,
             file: null,
-            current: {},
-            songs: [{
-                    title: 'Monkey Island Theme',
-                    source: require('../audio/Monkey Island Theme.mp3')
-                },
-                {
-                    title: 'Super Mario Bros Theme Song',
-                    source: require('../audio/Super Mario Bros Theme Song.mp3')
-                },
-                {
-                    title: 'Wartemusik',
-                    source: require('../audio/Wartemusik.mp3')
-                },
+            selectedFile: null,
+            index: -1,
+            songs: [
+                // {
+                //     title: 'Monkey Island Theme',
+                //     source: require('../audio/Monkey Island Theme.mp3')
+                // },
+                // {
+                //     title: 'Super Mario Bros Theme Song',
+                //     source: require('../audio/Super Mario Bros Theme Song.mp3')
+                // },
+                // {
+                //     title: 'Wartemusik',
+                //     source: require('../audio/Wartemusik.mp3')
+                // },
             ],
         }
         },
+    created() {
+        EventBus.$on('midi-filechooser', (data) => {
+            if(data.btnValue === 65){
+                //increase
+                if(this.songs.length > 0) {
+                if(this.index < this.songs.length - 1){
+                this.index += 1;
+                } else {
+                    this.index = 0;
+                }
+                }
+                // window.console.log(this.index)
+            } else if (data.btnValue === 63) {
+                //decrease
+                if (this.songs.length > 0) {
+                   if(this.index > 0){
+                       this.index -= 1;
+                   } else if (this.index === 0){
+                       this.index = this.songs.length - 1
+                   }
+                } 
+                // window.console.log('Length: ' +  this.songs.length + ' ' + this.index)
+            }
+            this.chooseFile(this.songs[this.index])
+        })
+        EventBus.$on('midi-sendLeft', (data) => {
+            if(data.btnValue === 0){
+                this.sendLeft();
+            }
+        });
+        EventBus.$on('midi-sendRight', (data) => {
+            if(data.btnValue === 0){
+                this.sendRight();
+            }
+        });
+    },
         methods: {
+            checkMice(yo){
+                window.console.log(yo)
+            },
+            chooseFile(selectedFile){
+                this.selectedFile = selectedFile
+                // window.console.log(this.selectedFile)
+            },
             clearLeftFiles() {
                 this.$refs['file-input'].reset()
             },
             sendLeft() {
-                window.console.log('sent left');
+                if(this.selectedFile){
+                EventBus.$emit('loadLeft', this.selectedFile )
+                window.console.log('Send to left');
+                }
             },
             sendRight() {
-                window.console.log('sent right');
-            },
+                if(this.selectedFile){
+                    EventBus.$emit('loadRight', this.selectedFile )
+                window.console.log('Send to right');
+            }},
             addTrack() {
                 if (this.file) {
-                    window.console.log(this.file)
-                    window.console.log(this.file.name)
-                    var newSong = {
+                     var newSong = {
                         title: this.file.name,
                         source: this.file
                     }
-                    window.console.log(URL.createObjectURL(this.file));
-                    this.songs.push(newSong);
+                     this.songs.push(newSong);
                    
                     this.$refs['file-input'].reset()
                 }
-                window.console.log(this.songs);
+                // window.console.log(this.songs);
             },
             fileChosen(file) {
                 EventBus.$emit("fileChosen", file);
@@ -146,6 +200,9 @@ export default {
     height: auto;
     float: right;
     padding: 20px
+}
+.hovering{
+  color: red
 }
 
 </style>
