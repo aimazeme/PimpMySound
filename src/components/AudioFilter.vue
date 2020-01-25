@@ -122,22 +122,49 @@ export default {
             }
         });
 
-        EventBus.$on('midi-to-filter-' + this.filterType + "-Freq", (data) => {  
-            this.frequency = this.minFreq + ((data.btnValue / 127) * (this.maxFreq - this.minFreq));
+        EventBus.$on('midi-to-filter-' + this.filterType + "-Freq-2", (data) => { 
+            if (this.playerNr == 2) {
+                this.frequency = this.minFreq + ((data.btnValue / 127) * (this.maxFreq - this.minFreq));
+            }       
         });
 
-        EventBus.$on('midi-to-filter-' + this.filterType+ "-Gain", (data) => {  
-            if (this.gainEnabled) {
-                this.gain = this.minFreq + ((data.btnValue / 127) * (this.maxFreq - this.minFreq));
+        EventBus.$on('midi-to-filter-' + this.filterType+ "-Gain-2", (data) => {  
+            if (this.playerNr == 2) {
+                if (this.gainEnabled) {
+                    this.gain = this.minFreq + ((data.btnValue / 127) * (this.maxFreq - this.minFreq));
+                }
+            }            
+        });
+
+        EventBus.$on('midi-to-filter-' + this.filterType + "-Qual-2", (data) => {  
+            if (this.playerNr == 2) {
+                if (this.qualityEnabled) {
+                    this.Qval = this.minFreq + ((data.btnValue / 127) * (this.maxFreq - this.minFreq));
+                }
+            }         
+        });
+
+        EventBus.$on('midi-to-filter-' + this.filterType + "-Freq-1", (data) => {  
+            if (this.playerNr == 1) {
+                this.frequency = this.minFreq + ((data.btnValue / 127) * (this.maxFreq - this.minFreq));
             }
             
         });
 
-        EventBus.$on('midi-to-filter-' + this.filterType + "-Qual", (data) => {  
-            if (this.qualityEnabled) {
-                this.Qval = this.minFreq + ((data.btnValue / 127) * (this.maxFreq - this.minFreq));
-            }
-            
+        EventBus.$on('midi-to-filter-' + this.filterType+ "-Gain-1", (data) => {  
+            if (this.playerNr == 1) {
+                if (this.gainEnabled) {
+                    this.gain = this.minFreq + ((data.btnValue / 127) * (this.maxFreq - this.minFreq));
+                }
+            }          
+        });
+
+        EventBus.$on('midi-to-filter-' + this.filterType + "-Qual-1", (data) => {  
+            if (this.playerNr == 1) {
+                if (this.qualityEnabled) {
+                    this.Qval = this.minFreq + ((data.btnValue / 127) * (this.maxFreq - this.minFreq));
+                }
+            }            
         });
     },
 
