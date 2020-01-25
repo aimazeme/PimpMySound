@@ -47,7 +47,7 @@ export default {
         EventBus.$on('midi-volumeLeft', (data) => {
             window.console.log('dfa')
             if(this.playerNr === 1){
-            this.sliderValue =  data.btnValue / 127 * 100
+            this.sliderValue =  data.btnValue / 127 * this.sliderMaxValue
             window.console.log(this.sliderValue)
             this.adjustVolume()
             }
@@ -55,7 +55,7 @@ export default {
         
         EventBus.$on('midi-volumeRight', (data) => {
             if(this.playerNr === 2){
-            this.sliderValue =  data.btnValue / 127 * 100
+            this.sliderValue =  data.btnValue / 127 * this.sliderMaxValue
             window.console.log(this.sliderValue)
             this.adjustVolume()
             }

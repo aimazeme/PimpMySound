@@ -27,9 +27,12 @@
         </b-form-group>
         
       </div> 
-      <AudioFilter id="afilter" filterType="lowshelf" nextComponent="filter-peaking" v-bind:playerNr="playerNr"/>
-      <AudioFilter id="afilter" filterType="peaking" nextComponent="filter-highshelf" v-bind:playerNr="playerNr"/>
-      <AudioFilter id="afilter" filterType="highshelf" nextComponent="crossFader" v-bind:playerNr="playerNr"/>
+      <AudioFilter id="afilter" filterType="lowshelf" nextComponent="filter-peaking" v-bind:playerNr="playerNr" 
+        v-bind:minFreq="20" v-bind:maxFreq="7000" v-bind:minGain="-20" v-bind:maxGain="20" v-bind:minQ="0" v-bind:maxQ="10"/>
+      <AudioFilter id="afilter" filterType="peaking" nextComponent="filter-highshelf" v-bind:playerNr="playerNr" 
+        v-bind:minFreq="7000" v-bind:maxFreq="13000" v-bind:minGain="-20" v-bind:maxGain="20" v-bind:minQ="0" v-bind:maxQ="10"/>
+      <AudioFilter id="afilter" filterType="highshelf" nextComponent="crossFader" v-bind:playerNr="playerNr" 
+        v-bind:minFreq="13000" v-bind:maxFreq="20000" v-bind:minGain="-20" v-bind:maxGain="20" v-bind:minQ="0" v-bind:maxQ="10"/>
     </b-card>
 </template>
 
@@ -68,6 +71,7 @@ export default {
         return {
         file: null,
         myToggle: false,
+        nextComponent: "filter-lowshelf",
         buttons: [
           { caption: 'x0.5', state: false, id: '1', img: 'flag' },
           { caption: 'Pause', state: false, id: '2', img:  '../assets/backwards.svg' },
@@ -108,14 +112,14 @@ export default {
           } else if(this.audioState === EnumAudioStates.isPaused){
             this.pauseAudio()
           } else if(this.audioState === EnumAudioStates.isStopped) {
-          this.playAudio(0);
+          this.playAudio();
           }
         }
       });
            
       EventBus.$on('midi-playRight', midiData => {
         if (this.playerNr == 2 && this.file != null && midiData.btnValue === 0) {
-          this.playAudio(0);
+          this.playAudio();
         }
       });
 
@@ -181,7 +185,7 @@ export default {
       execute(state) {
         switch (state) {
           case 'Play':
-            this.playAudio(0);
+            this.playAudio();
             break;
           case 'Pause':
             this.pauseAudio();
@@ -260,23 +264,20 @@ export default {
       /**
        * Starts playing the audio at given offset
        */
-      playAudio(offset) {
+      playAudio() {
         if (this.file !== null) {       
           if (this.audioState === EnumAudioStates.isPlaying) this.stopAudio();
           else {            
             this.loadAudio(this.file);        
-            this.source.start(0, offset);
+            this.source.start(0);
             if(this.buttons[EnumAudioStates.isPacedUp].state){
               this.increasePlaybackRate();
             }
             if(this.buttons[EnumAudioStates.isSlowedDown].state){
               this.decreasePlaybackRate();
             }
-            // if (offset === 0) { 
-            //   this.startTime = performance.now(); 
-            // } 
             this.changeCurrentStateTo(EnumAudioStates.isPlaying);
-            EventBus.$emit('to-filter-lowshelf', {audioNode: this.source, playerNr: this.playerNr});
+            EventBus.$emit('to-' + this.nextComponent, {audioNode: this.source, playerNr: this.playerNr});
           }         
         } else this.buttons[EnumAudioStates.isPlaying].state = false;
       },
@@ -303,7 +304,7 @@ export default {
         else if (this.audioState !== EnumAudioStates.isStopped) {
           this.source.stop(); 
           this.changeCurrentStateTo(EnumAudioStates.isStopped)        
-        } else this.playAudio(0);        
+        } else this.playAudio();        
       },
       
       /**

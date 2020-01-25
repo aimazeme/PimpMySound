@@ -22,7 +22,7 @@
                             variant="danger"
                             id="reset"
                             size="sm"   
-                            @click="clearLeftFiles()" 
+                            @click="clearSelectedFile()" 
                             class="mr-2">Reset
                         </b-button>
                         <p id="selected" class="mt-2">Selected file: {{file ? file.name : ''}}</p>
@@ -67,7 +67,8 @@ export default {
             songs: [
             ],
         }
-        },
+    },
+
     created() {
         EventBus.$on('midi-filechooser', (data) => {
             if(data.btnValue === 65){
@@ -85,75 +86,88 @@ export default {
                 if (this.songs.length > 0) {
                    if(this.index > 0){
                        this.index -= 1;
-                   } else if (this.index === 0){
+                    } else if (this.index === 0){
                        this.index = this.songs.length - 1
-                   }
+                    }
                 } 
-                // window.console.log('Length: ' +  this.songs.length + ' ' + this.index)
             }
-            if(this.songs.length > 0){
-            this.chooseFile(this.songs[this.index])
+            if(this.songs.length > 0) {
+                this.chooseFile(this.songs[this.index])
             }
         })
+
         EventBus.$on('midi-sendLeft', (data) => {
             if(data.btnValue === 0){
                 this.sendLeft();
             }
         });
+
         EventBus.$on('midi-sendRight', (data) => {
             if(data.btnValue === 0){
                 this.sendRight();
             }
         });
     },
-        methods: {
-            checkMice(yo){
-                window.console.log(yo)
-            },
-            chooseFile(selectedFile){
-                this.selectedFile = selectedFile
-                var counter = 0;
+    methods: {
+        /**
+         * Selects a file from list as the current selected file
+         */
+        chooseFile(selectedFile){
+            this.selectedFile = selectedFile
+            var counter = 0;
 
-                for(const song in this.songs){
-                    
-                    if(song.title === selectedFile.title){
-                        this.index = counter;
-                        break
-                    }
-                    counter++
+            for(const song in this.songs){
+                
+                if(song.title === selectedFile.title){
+                    this.index = counter;
+                    break
                 }
-            },
-            clearLeftFiles() {
+                counter++
+            }
+        },
+
+        /**
+         * Clear the selected file
+         */
+        clearSelectedFile() {
+            this.$refs['file-input'].reset()
+        },
+
+        /**
+         * Send file to the left player
+         */
+        sendLeft() {
+            if(this.selectedFile){
+            EventBus.$emit('loadLeft', this.selectedFile)
+            window.console.log('Send to left');
+            }
+        },
+
+        /**
+         * Send file to the right player
+         */
+        sendRight() {
+            if(this.selectedFile){
+                EventBus.$emit('loadRight', this.selectedFile )
+            window.console.log('Send to right');
+        }},
+
+        /**
+         * Add a track to the list
+         */
+        addTrack() {
+            if (this.file) {
+                    var newSong = {
+                    title: this.file.name,
+                    source: this.file
+                }
+                    this.songs.push(newSong);
+                
                 this.$refs['file-input'].reset()
-            },
-            sendLeft() {
-                if(this.selectedFile){
-                EventBus.$emit('loadLeft', this.selectedFile)
-                window.console.log('Send to left');
-                }
-            },
-            sendRight() {
-                if(this.selectedFile){
-                    EventBus.$emit('loadRight', this.selectedFile )
-                window.console.log('Send to right');
-            }},
-            addTrack() {
-                if (this.file) {
-                     var newSong = {
-                        title: this.file.name,
-                        source: this.file
-                    }
-                     this.songs.push(newSong);
-                   
-                    this.$refs['file-input'].reset()
-                }
-                // window.console.log(this.songs);
-            },
-            fileChosen(file) {
-                EventBus.$emit("fileChosen", file);
             }
         }
-        }
+    }
+}
 </script>
 
 <style scoped>
