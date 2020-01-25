@@ -45,6 +45,7 @@ export default {
                 EventBus.$emit('to-volumeSlider', {audioNode: this.gainNode2, playerNr: 2})                
             }                       
         });
+        
         EventBus.$on('midi-crossfader', (data) => {
             window.console.log('midi')
             window.console.log(data)
