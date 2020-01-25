@@ -19,7 +19,19 @@ const midiStates = [
   { id: 32, property: 'stopRight' },
   { id: 3, property: 'filechooser'},
   { id: 16, property: 'sendLeft'},
-  { id: 17, property: 'sendRight'}
+  { id: 17, property: 'sendRight'},
+
+//   { id: 6, property: '1lowshelfFreq'},
+//   { id: 7, property: '1lowshelfGain'},
+//   { id: 8, property: '2lowshelfFreq'},
+//   { id: 9, property: '2lowshelfGain'},
+//   { id: 10, property: 'lhshelfFreq'},
+//   { id: 11, property: 'lhshelfGain'},
+//   { id: 12, property: 'rhshelfFreq'},
+//   { id: 13, property: 'rhshelfGain'},
+
+
+
   
 ];
 midiStates.forEach(entry => midiMap.set(entry.id,entry.property))

@@ -1,6 +1,9 @@
 <template>
     <b-card id="card" bg-variant="default" class="text-center"> 
       <div id="center-file-input-bar">
+
+        <Soundtrack v-bind:playerNr="playerNr"/>
+
         <b-form-group label-for="file-small" label-size="sm">
         
           <p class="mt-3"> {{file ? file.name : 'No track given'}}</p>
@@ -34,6 +37,7 @@ import { AudioCtx } from '../main';
 import { AudioCtx2} from '../main';
 import AudioFilter from './AudioFilter.vue';
 import VolumeSlider from './VolumeSlider.vue';
+import Soundtrack from './Soundtrack';
 /**
  * Audio States
  */
@@ -53,7 +57,7 @@ export default {
     },
 
     components: {
-      AudioFilter, VolumeSlider
+      AudioFilter, VolumeSlider, Soundtrack
     },
 
     data: function() {
@@ -93,7 +97,13 @@ export default {
 
         EventBus.$on('midi-playLeft', midiData => {
         if (this.playerNr == 1 && this.file != null && midiData.btnValue === 0) {
+          if(this.audioState === EnumAudioStates.isPlaying){
+            this.pauseAudio()
+          } else if(this.audioState === EnumAudioStates.isPaused){
+            this.pauseAudio()
+          } else if(this.audioState === EnumAudioStates.isStopped) {
           this.playAudio(0);
+          }
         }
       });
            EventBus.$on('midi-playRight', midiData => {
@@ -108,20 +118,24 @@ export default {
           this.stopAudio();
         }
       });
-           EventBus.$on('midi-stopRight', midiData => {
+    
+    EventBus.$on('midi-stopRight', midiData => {
         if (this.playerNr == 2 && this.file != null && midiData.btnValue === 0) {
           this.stopAudio();
         }
       });
 
-        EventBus.$on('loadLeft', data => {
+    EventBus.$on('loadLeft', data => {
         if (this.playerNr == 1) {
           this.file = data.source;
+          this.drawAudio(this.file);
         }
       });
-       EventBus.$on('loadRight', data => {
+       
+    EventBus.$on('loadRight', data => {
         if (this.playerNr == 2) {
           this.file = data.source;
+          this.drawAudio(this.file);
         }
       });
     },
@@ -135,9 +149,9 @@ export default {
       file: function(){       
         // Lädt den Buffer ins Audio
         if(this.file !== null){
-        if (this.audioContext.state === 'suspended') {
-          this.source.stop();
-          this.audioContext.resume();         
+        if (this.audioState === EnumAudioStates.isPaused) {
+          this.audioContext.resume();      
+          this.source.stop();   
         }
         if (this.audioState === EnumAudioStates.isPlaying) this.source.stop();
         this.buttons[this.audioState].state = false;
@@ -219,6 +233,18 @@ export default {
             this.audioContext.decodeAudioData(audioData).then(buffer => {
                 this.source.buffer = buffer;          
             });
+        });
+      },
+
+      drawAudio(response) {
+        this.source = this.audioContext.createBufferSource();
+        window.console.log(response); 
+        response.arrayBuffer()
+        .then(audioData => {this.audioContext.decodeAudioData(audioData)
+          .then(buffer => {
+              EventBus.$emit("SongData", {buffer: buffer, playerNr: this.playerNr});
+            this.source.buffer = buffer;
+          });
         });
       },
 

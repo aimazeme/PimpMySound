@@ -1,8 +1,8 @@
 <template>
     <div class="sliderContainer">
     <div>
-        <b-button  id="FilterCollapse" v-b-toggle.collapse-1 variant="outline-info btn-block">{{this.filterType.charAt(0).toUpperCase() + this.filterType.slice(1)}} </b-button>
-        <b-collapse id="collapse-1" class="mt-2">
+        <b-button  id="FilterCollapse" v-b-toggle="filterType + playerNr" variant="outline-info btn-block">{{this.filterType.charAt(0).toUpperCase() + this.filterType.slice(1)}} </b-button>
+        <b-collapse v-bind:id="filterType + playerNr" class="mt-2">
             <b-card>
                 <b-form inline>
                     <div id="toggle">
