@@ -17,7 +17,7 @@
               :pressed.sync="btn.state"
               @click="execute(btn.caption)"
               variant="outline-dark">
-              <b-icon icon="arrow-up"/>
+              <!-- <b-icon icon="arrow-up"/> -->
               <!--img :src="'../assets/' + btn.img" alt="asdf"/-->
               {{ btn.caption }}
             </b-button>
@@ -54,6 +54,7 @@ const EnumAudioStates = {
 
 export default {
     name: 'FileInput',
+    
     props: {
       playerNr: Number,
     },
@@ -86,18 +87,20 @@ export default {
       EventBus.$on("fileChosen", file => {
         this.loadFile(file);
       });
+
       EventBus.$on('midi-speedLeft', midiData => {
         if (this.playerNr == 1 && this.file != null) {
           this.changePlaybackRate(midiData.btnValue)
         }
       });
+
       EventBus.$on('midi-speedRight', midiData => {
         if (this.playerNr == 2 && this.file != null) {
           this.changePlaybackRate(midiData.btnValue)
         }
       });
 
-        EventBus.$on('midi-playLeft', midiData => {
+      EventBus.$on('midi-playLeft', midiData => {
         if (this.playerNr == 1 && this.file != null && midiData.btnValue === 0) {
           if(this.audioState === EnumAudioStates.isPlaying){
             this.pauseAudio()
@@ -108,36 +111,37 @@ export default {
           }
         }
       });
-           EventBus.$on('midi-playRight', midiData => {
+           
+      EventBus.$on('midi-playRight', midiData => {
         if (this.playerNr == 2 && this.file != null && midiData.btnValue === 0) {
           this.playAudio(0);
         }
       });
 
-    EventBus.$on('midi-stopLeft', midiData => {
-      window.console.log("stop left")
-        if (this.playerNr == 1 && this.file != null && midiData.btnValue === 0) {
-          this.stopAudio();
-        }
-      });
+      EventBus.$on('midi-stopLeft', midiData => {
+        window.console.log("stop left")
+          if (this.playerNr == 1 && this.file != null && midiData.btnValue === 0) {
+            this.stopAudio();
+          }
+        });
     
-    EventBus.$on('midi-stopRight', midiData => {
+      EventBus.$on('midi-stopRight', midiData => {
         if (this.playerNr == 2 && this.file != null && midiData.btnValue === 0) {
           this.stopAudio();
         }
       });
 
-    EventBus.$on('loadLeft', data => {
+      EventBus.$on('loadLeft', data => {
         if (this.playerNr == 1) {
           this.file = data.source;
-          this.drawAudio(this.file);
+          this.loadAudio(this.file);
         }
       });
        
-    EventBus.$on('loadRight', data => {
+      EventBus.$on('loadRight', data => {
         if (this.playerNr == 2) {
           this.file = data.source;
-          this.drawAudio(this.file);
+          this.loadAudio(this.file);
         }
       });
     },
@@ -151,15 +155,16 @@ export default {
       file: function(){       
         // Lädt den Buffer ins Audio
         if(this.file !== null){
-        if (this.audioState === EnumAudioStates.isPaused) {
-          this.audioContext.resume();      
-          this.source.stop();   
+          if (this.audioState === EnumAudioStates.isPaused) {
+            this.audioContext.resume();      
+            this.source.stop();   
+          }
+          if (this.audioState === EnumAudioStates.isPlaying) this.source.stop();
+            this.buttons[this.audioState].state = false;
+            this.audioState = EnumAudioStates.isStopped;
+            this.loadAudio(this.file);       
         }
-        if (this.audioState === EnumAudioStates.isPlaying) this.source.stop();
-        this.buttons[this.audioState].state = false;
-        this.audioState = EnumAudioStates.isStopped;
-        this.loadAudio(this.file);       
-      }}
+      }
     },
 
     computed: {
@@ -233,21 +238,11 @@ export default {
         this.source = this.audioContext.createBufferSource(); 
         response.arrayBuffer().then(audioData => {
             this.audioContext.decodeAudioData(audioData).then(buffer => {
-                this.source.buffer = buffer;          
-            });
-        });
-      },
-
-      drawAudio(response) {
-        this.source = this.audioContext.createBufferSource();
-        window.console.log(response); 
-        response.arrayBuffer()
-        .then(audioData => {this.audioContext.decodeAudioData(audioData)
-          .then(buffer => {
+              this.source.buffer = buffer; 
               EventBus.$emit("SongData", {buffer: buffer, playerNr: this.playerNr});
-            this.source.buffer = buffer;
-          });
-        });
+                          
+            });
+        }).catch(window.console.log());
       },
 
       /**

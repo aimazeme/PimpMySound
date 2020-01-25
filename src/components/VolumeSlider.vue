@@ -17,6 +17,7 @@ export default {
     props: {
       playerNr: Number
     },
+
     data() {  
         return {
             sliderMaxValue: 100,
@@ -42,6 +43,7 @@ export default {
                 this.adjustVolume();                
             }          
         }); 
+
         EventBus.$on('midi-volumeLeft', (data) => {
             window.console.log('dfa')
             if(this.playerNr === 1){
@@ -50,6 +52,7 @@ export default {
             this.adjustVolume()
             }
         }); 
+        
         EventBus.$on('midi-volumeRight', (data) => {
             if(this.playerNr === 2){
             this.sliderValue =  data.btnValue / 127 * 100

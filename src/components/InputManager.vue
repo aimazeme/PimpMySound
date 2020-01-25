@@ -28,69 +28,55 @@ const midiStates = [
 //   { id: 10, property: 'lhshelfFreq'},
 //   { id: 11, property: 'lhshelfGain'},
 //   { id: 12, property: 'rhshelfFreq'},
-//   { id: 13, property: 'rhshelfGain'},
-
-
-
-  
+//   { id: 13, property: 'rhshelfGain'}, 
 ];
+
 midiStates.forEach(entry => midiMap.set(entry.id,entry.property))
 
- window.console.log(midiMap.get(48));
+window.console.log(midiMap.get(48));
 
 export default {
     name: 'InputManager',
-    props: {
-     
-    },
-    data() {
-        return {
-        }     
-    },
-    watch: {
-             btnID: function(){
-                     }
+
+    watch: { 
+        btnID: function(){}
     },
 
     created() {
-
-  navigator.requestMIDIAccess().then(this.onMidiDevice.bind(this));
-//         window.addEventListener('keyup', this.onKeyboardEvent.bind(this));
-    
+    navigator.requestMIDIAccess().then(this.onMidiDevice.bind(this));
+//      window.addEventListener('keyup', this.onKeyboardEvent.bind(this));
         this.midiMapping = new Map();
         this.keyboardMapping = new Map();
     },
 
     methods: {
-onMidiDevice(access) {
-        const inputs = access.inputs.values();
-        // const outputs = access.outputs.values();
+        onMidiDevice(access) {
+            const inputs = access.inputs.values();
+            // const outputs = access.outputs.values();
 
-        for (const input of inputs) {
-            window.console.log(input);
-            input.onmidimessage = this.onMidiEvent.bind(this);
-        }
-    },
-     onMidiEvent(event) {
-        let cmd = event.data[0] >> 4;
-        // let channel = event.data[0] & 0xf;
-        let btnID = event.data[1];
-        let btnValue = event.data[2];
+            for (const input of inputs) {
+                window.console.log(input);
+                input.onmidimessage = this.onMidiEvent.bind(this);
+            }
+        },
 
-    window.console.log(`cmd: ${cmd}, btnID: ${btnID}, value: ${btnValue}`);
-    //   window.console.log('midi-' + midiMap.get(btnID))
-      if(cmd === 11 ){
-      EventBus.$emit('midi-' + midiMap.get(btnID), {cmd: cmd, btnID: btnID, btnValue: btnValue});
-      } 
-      else if ( cmd === 8 && (btnValue === 0 || btnValue === 127)){
-        EventBus.$emit('midi-' + midiMap.get(btnID), {cmd: cmd, btnID: btnID, btnValue: btnValue});
-     
-      }
-    },
-    mapMidi(btnID, callbackFn) {
-        this.midiMapping.set(btnID, callbackFn);
-    },
- 
+        onMidiEvent(event) {
+            let cmd = event.data[0] >> 4;
+            // let channel = event.data[0] & 0xf;
+            let btnID = event.data[1];
+            let btnValue = event.data[2];
+
+            window.console.log(`cmd: ${cmd}, btnID: ${btnID}, value: ${btnValue}`);
+            //   window.console.log('midi-' + midiMap.get(btnID))
+            if(cmd === 11 )
+                EventBus.$emit('midi-' + midiMap.get(btnID), {cmd: cmd, btnID: btnID, btnValue: btnValue});
+            else if ( cmd === 8 && (btnValue === 0 || btnValue === 127))
+                EventBus.$emit('midi-' + midiMap.get(btnID), {cmd: cmd, btnID: btnID, btnValue: btnValue});
+        },
+
+        mapMidi(btnID, callbackFn) {
+            this.midiMapping.set(btnID, callbackFn);
+        },
     }
 }
 </script>
