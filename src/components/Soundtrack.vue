@@ -1,6 +1,8 @@
 <template>
     <div>
-        <canvas v-bind:id="'canvas'+playerNr" width="950" height="50"></canvas>
+        <b-card id="visualizer" bg-variant="light" class="text-center">
+            <canvas v-bind:id="'canvas'+playerNr" width="1100" height="40" ></canvas>
+        </b-card>
     </div>
 </template>
 
@@ -143,5 +145,9 @@ export default {
 </script>
 
 <style scoped>
+
+#visualizer {
+    border-radius: 20px
+}
 
 </style>

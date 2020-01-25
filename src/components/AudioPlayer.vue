@@ -2,11 +2,12 @@
     <b-card id="card" bg-variant="default" class="text-center"> 
       <div id="center-file-input-bar">
 
-        <Soundtrack v-bind:playerNr="playerNr"/>
-
         <b-form-group label-for="file-small" label-size="sm">
         
-          <p class="mt-3"> {{file ? file.name : 'No track given'}}</p>
+          <p class="mt-3"><strong>{{file ? file.name : 'No track given'}}</strong> </p>
+          <hr>
+
+          <Soundtrack v-bind:playerNr="playerNr"/>
 
           <VolumeSlider v-bind:playerNr="playerNr"/>
 

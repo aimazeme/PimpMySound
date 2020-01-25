@@ -5,12 +5,14 @@
         <b-collapse v-bind:id="filterType + playerNr" class="mt-2">
             <b-card>
                 <b-form inline>
+                   
                     <div id="toggle">
                         <label class="switch">
                         <input type="checkbox" v-model="enabled">
                         <span class="slider round"></span>
                         </label>
                     </div>
+
                     <div id="freq" >
                         <circle-slider v-model="frequency" :side="50" :min="1" :max="100" :step-size="1"></circle-slider>
                         <p for="freq">Frequency: {{ frequency }}</p>
@@ -137,17 +139,22 @@ export default {
 </script>
 
 <style scoped>
+
+#FilterCollapse {
+    border-radius: 10px;
+    margin: 4px
+}
+
 #freq {
-    margin-left: 20%
+    margin-left: 15%
 }
 
 #qual {
-    margin-left: 10%;
-    margin-right: 10%
+    margin-left: 15%;
 }
 
 #gain {
-    margin-right: 20%
+    margin-left: 15%;
 }
 
 .switch {
@@ -188,11 +195,11 @@ export default {
 }
 
 input:checked + .slider {
-  background-color: #2196F3;
+  background-color: rgb(116, 194, 197);
 }
 
 input:focus + .slider {
-  box-shadow: 0 0 1px #2196F3;
+  box-shadow: 0 0 1px rgb(13, 51, 82);
 }
 
 input:checked + .slider:before {
@@ -203,11 +210,11 @@ input:checked + .slider:before {
 
 /* Rounded sliders */
 .slider.round {
-  border-radius: 34px;
+  border-radius: 15px;
 }
 
 .slider.round:before {
-  border-radius: 50%;
+  border-radius: 40%;
 }
 </style>
 
