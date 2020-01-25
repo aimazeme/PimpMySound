@@ -31,8 +31,8 @@
             </b-form-group>
         </div>
         
-            <b-button variant="outline-danger" id="putLeft" @click="sendLeft()" size="sm">Left Track</b-button>
-            <b-button variant="outline-info" id="putRight" @click="sendRight()" size="sm">Right Track</b-button>            
+        <b-button variant="outline-danger" id="putLeft" @click="sendLeft()" size="sm">Left Track</b-button>
+        <b-button variant="outline-info" id="putRight" @click="sendRight()" size="sm">Right Track</b-button>            
 
         
         <b-list-group id="songlist" size="sm" >
