@@ -45,19 +45,15 @@ export default {
                 EventBus.$emit('to-volumeSlider', {audioNode: this.gainNode2, playerNr: 2})                
             }                       
         });
+        
         EventBus.$on('midi-crossfader', (data) => {
             window.console.log('midi')
             window.console.log(data)
-            this.sliderValue =  data.btnValue / 127 * 100
+            this.sliderValue =  data.btnValue / 127 * this.sliderMaxValue
             this.adjustCrossfading()
         })
         
     },
-    
-    // mounted() {
-    //     this.gainNode1.connect(AudioCtx.destination);
-    //     this.gainNode2.connect(AudioCtx.destination);
-    // },
 
     methods: {
         /**

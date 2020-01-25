@@ -32,6 +32,9 @@ export default {
     },
 
     methods: {
+        /**
+         * One function call for all the methods below (draw, normalizeData, filterData) 
+         */
         drawAudio(buffer){
             this.draw(this.normalizeData(this.filterData(buffer)));
         },
@@ -54,14 +57,17 @@ export default {
             return filteredData;
         },
 
+        /**
+         * Normalizes the filtered data
+         */
         normalizeData(filteredData) {
             const multiplier = Math.pow(Math.max(...filteredData), -1);
             return filteredData.map(n => n * multiplier);
         },
 
-/*
-    Canvas wird eingestellt. Größe und Breite der Tonspur wird angepasst.
-*/
+        /**
+         * Configures the canvas element
+         */
         draw(normalizedData) {
             const canvas = document.getElementById("canvas" + this.playerNr);    
             const padding = 20;
@@ -83,9 +89,9 @@ export default {
             }
         },
 
-/*
-    Zeichnen der Linien.
-*/
+        /*
+         *  Draws one line
+         */
         drawLineSegment(ctx, x, height, width, isEven) {
             ctx.lineWidth = 1; 
             if(this.playerNr==1)
