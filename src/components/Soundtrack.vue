@@ -1,26 +1,28 @@
 <template>
     <div>
         <b-card id="visualizer" bg-variant="light" class="text-center">
-            <canvas v-bind:id="'canvas'+playerNr" width="1100" height="40" ></canvas>
+            <canvas v-bind:id="'canvas'+playerNr" width="1100" height="40"></canvas>
         </b-card>
     </div>
 </template>
 
 <script>
 import { EventBus } from '../main';
+
 export default {
     name: 'Soundtrack',
 
     props: {
         playerNr: Number,
     },
-    date(){
-        return{
-            data: null
+
+    data() {
+        return {
+            data: null,
         }
     },
 
-    created(){
+    created() {
         EventBus.$on('SongData', (data) => {
             if (this.playerNr==data.playerNr){   
             this.data = data.buffer;
@@ -30,10 +32,12 @@ export default {
     },
 
     methods: {
+        /**
+         * One function call for all the methods below (draw, normalizeData, filterData) 
+         */
         drawAudio(buffer){
             this.draw(this.normalizeData(this.filterData(buffer)));
         },
-
 /*
     Filtern des Buffers auf einen Channel und Genauigkeit der Visualisierung einstellen indem man in Samples teilt. 
 */
@@ -53,14 +57,17 @@ export default {
             return filteredData;
         },
 
+        /**
+         * Normalizes the filtered data
+         */
         normalizeData(filteredData) {
             const multiplier = Math.pow(Math.max(...filteredData), -1);
             return filteredData.map(n => n * multiplier);
         },
 
-/*
-    Canvas wird eingestellt. Größe und Breite der Tonspur wird angepasst.
-*/
+        /**
+         * Configures the canvas element
+         */
         draw(normalizedData) {
             const canvas = document.getElementById("canvas" + this.playerNr);    
             const padding = 20;
@@ -82,9 +89,9 @@ export default {
             }
         },
 
-/*
-    Zeichnen der Linien.
-*/
+        /*
+         *  Draws one line
+         */
         drawLineSegment(ctx, x, height, width, isEven) {
             ctx.lineWidth = 1; 
             if(this.playerNr==1)
@@ -100,8 +107,7 @@ export default {
             ctx.stroke();
         },
 
-    }
-
+    },
 }
 </script>
 

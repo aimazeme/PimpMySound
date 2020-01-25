@@ -14,13 +14,13 @@
                     </div>
 
                     <div id="freq" >
-                        <circle-slider v-model="frequency" :side="50" :min="1" :max="100" :step-size="1"></circle-slider>
+                        <circle-slider v-model="frequency" :side="50" v-bind:min="minFreq" v-bind:max="maxFreq" :step-size="1"></circle-slider>
                         <p for="freq">Frequency: {{ frequency }}</p>
                     </div>
 
                     <div id="qual">
                         <div v-if="qualityEnabled"> 
-                            <circle-slider v-model="Qval" :side="50" :min="1" :max="100" :step-size="1" ></circle-slider>
+                            <circle-slider v-model="Qval" :side="50" v-bind:min="minQ" v-bind:max="maxQ" :step-size="1" ></circle-slider>
                             <p for="qual">Quality: {{ Qval }}</p>
                         </div>
                         
@@ -28,7 +28,7 @@
 
                     <div id="gain" >
                         <div v-if="gainEnabled">
-                            <circle-slider v-model="gain" :side="50" :min="1" :max="100" :step-size="1"  ></circle-slider>
+                            <circle-slider v-model="gain" :side="50" v-bind:min="minGain" v-bind:max="maxGain" :step-size="1"  ></circle-slider>
                             <p for="gain">Gain: {{ gain }}</p>
                         </div>
                     </div>
@@ -51,6 +51,12 @@ export default {
         filterType: String,
         playerNr: Number,
         nextComponent: String,
+        minFreq: Number,
+        maxFreq: Number,
+        minGain: Number,
+        maxGain: Number,
+        minQ: Number,
+        maxQ: Number
     },
 
     data() {
@@ -115,6 +121,51 @@ export default {
                 this.connect();
             }
         });
+
+        EventBus.$on('midi-to-filter-' + this.filterType + "-Freq-2", (data) => { 
+            if (this.playerNr == 2) {
+                this.frequency = this.minFreq + ((data.btnValue / 127) * (this.maxFreq - this.minFreq));
+            }       
+        });
+
+        EventBus.$on('midi-to-filter-' + this.filterType+ "-Gain-2", (data) => {  
+            if (this.playerNr == 2) {
+                if (this.gainEnabled) {
+                    this.gain = this.minFreq + ((data.btnValue / 127) * (this.maxFreq - this.minFreq));
+                }
+            }            
+        });
+
+        EventBus.$on('midi-to-filter-' + this.filterType + "-Qual-2", (data) => {  
+            if (this.playerNr == 2) {
+                if (this.qualityEnabled) {
+                    this.Qval = this.minFreq + ((data.btnValue / 127) * (this.maxFreq - this.minFreq));
+                }
+            }         
+        });
+
+        EventBus.$on('midi-to-filter-' + this.filterType + "-Freq-1", (data) => {  
+            if (this.playerNr == 1) {
+                this.frequency = this.minFreq + ((data.btnValue / 127) * (this.maxFreq - this.minFreq));
+            }
+            
+        });
+
+        EventBus.$on('midi-to-filter-' + this.filterType+ "-Gain-1", (data) => {  
+            if (this.playerNr == 1) {
+                if (this.gainEnabled) {
+                    this.gain = this.minFreq + ((data.btnValue / 127) * (this.maxFreq - this.minFreq));
+                }
+            }          
+        });
+
+        EventBus.$on('midi-to-filter-' + this.filterType + "-Qual-1", (data) => {  
+            if (this.playerNr == 1) {
+                if (this.qualityEnabled) {
+                    this.Qval = this.minFreq + ((data.btnValue / 127) * (this.maxFreq - this.minFreq));
+                }
+            }            
+        });
     },
 
     methods: {
@@ -160,8 +211,8 @@ export default {
 .switch {
   position: relative;
   display: inline-block;
-  width: 60px;
-  height: 34px;
+  width: 50px;
+  height: 28px;
 }
 
 .switch input { 
@@ -185,9 +236,9 @@ export default {
 .slider:before {
   position: absolute;
   content: "";
-  height: 26px;
-  width: 26px;
-  left: 4px;
+  height: 20px;
+  width: 20px;
+  left: 1px;
   bottom: 4px;
   background-color: white;
   -webkit-transition: .4s;
@@ -199,7 +250,7 @@ input:checked + .slider {
 }
 
 input:focus + .slider {
-  box-shadow: 0 0 1px rgb(13, 51, 82);
+  box-shadow: 0 0 1px rgb(91, 194, 194);
 }
 
 input:checked + .slider:before {
