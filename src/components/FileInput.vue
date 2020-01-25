@@ -14,6 +14,7 @@
               :pressed.sync="btn.state"
               @click="execute(btn.caption)"
               variant="outline-dark">
+              <!--img src="btn[idx].img" alt="asdf"/-->
               {{ btn.caption }}
             </b-button>
           </b-button-group>
@@ -60,11 +61,11 @@ export default {
         file: null,
         myToggle: false,
         buttons: [
-          { caption: 'x0.5', state: false },
-          { caption: 'Pause', state: false },
-          { caption: 'Play', state: false },
-          { caption: 'Stop', state: false },
-          { caption: 'x1.5', state: false }
+          { caption: 'x0.5', state: false, id: '1', img: '../assets/backwards.svg' },
+          { caption: 'Pause', state: false, id: '2', img:  '../assets/backwards.svg' },
+          { caption: 'Play', state: false, id: '3', img:  '../assets/backwards.svg'},
+          { caption: 'Stop', state: false, id: '4', img:  '../assets/backwards.svg'},
+          { caption: 'x1.5', state: false, id: '5', img:  '../assets/backwards.svg'}
         ],
         audioContext: AudioContext,
         source: AudioBufferSourceNode,
@@ -287,7 +288,7 @@ export default {
       loadFile(file) {
         if (file.target.files.length == 0) return;
         this.file = file;
-        window.console.log(file.target.files[0]);
+        window.console.log(file.target.files[0]);       
       },      
     }
 }
