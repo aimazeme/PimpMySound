@@ -15,9 +15,7 @@
                     drop-placeholder="Drop file here..." >
                 </b-form-file> 
 
-                <b-button variant="outline-danger" id="putLeft" @click="sendLeft()" size="sm">Left Track</b-button>
                 <b-button variant="secondary" id="addTrack" size="sm" @click="addTrack()">Add Track</b-button>
-                <b-button variant="outline-info" id="putRight" @click="sendRight()" size="sm">Right Track</b-button>            
                 <b-form inline>
                     <b-form inline>
                         <b-button
@@ -27,16 +25,18 @@
                             @click="clearLeftFiles()" 
                             class="mr-2">Reset
                         </b-button>
-                        <p class="mt-2">Selected file: {{file ? file.name : ''}}</p>
+                        <p id="selected" class="mt-2">Selected file: {{file ? file.name : ''}}</p>
                     </b-form>
-                     <b-button variant="danger" id="deleteTrack" size="sm">Delete Track</b-button>
                 </b-form>
             </b-form-group>
         </div>
         
-        <!-- <div> -->
-            <b-list-group id="songlist" size="sm" >
-                <b-list-group-item 
+            <b-button variant="outline-danger" id="putLeft" @click="sendLeft()" size="sm">Left Track</b-button>
+            <b-button variant="outline-info" id="putRight" @click="sendRight()" size="sm">Right Track</b-button>            
+
+        
+        <b-list-group id="songlist" size="sm" >
+            <b-list-group-item 
                 id="song.title" 
                 v-bind:key="song.title" 
                 v-for="song in songs" 
@@ -47,9 +47,8 @@
                 pill>
                  {{ song.title }} </b-badge>
                 <div v-else=""> {{song.title}}  </div>
-                </b-list-group-item>
-            </b-list-group>
-        <!-- </div> -->
+            </b-list-group-item>
+        </b-list-group>
     </b-card>
 </template>
 
@@ -159,30 +158,26 @@ export default {
 
 <style scoped>
 
-#addTrack {
-    margin: 10px;
-}
-
 #reset {
-    margin: 10px;
+    margin-top: 0%;
 }
 
-#deleteTrack {
-    margin-left: 65%;
+#addTrack {
+    margin-right: 0px;
+    margin-top: 5px;
+    float: right
 }
 
 #putLeft {
     margin: 10px;
-    float: left;
 }
 
 #putRight {
     margin: 10px;
-    float: right;
 }
 
 #musicLib {
-    width: 50%;
+    width: 40%;
     height: auto;
     float: left;
     padding: 20px;
@@ -197,10 +192,10 @@ export default {
 }
 
 #songlist {
-    width: 50%;
+    width: 60%;
     height: auto;
     float: right;
-    padding: 20px
+    padding: 10px
 }
 .hovering{
   color: red

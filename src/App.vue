@@ -2,8 +2,8 @@
   <div id="app">
     <div class="bg">
     <PimpMySound msg="Welcome to Pimp My Sound"/>
-    <FileInput v-bind:playerNr="1"/>  
-    <FileInput v-bind:playerNr="2"/>
+    <AudioPlayer v-bind:playerNr="1"/>  
+    <AudioPlayer v-bind:playerNr="2"/>
     <CrossFader/>   
     <FileList/>    
     <InputManager/>
@@ -13,7 +13,7 @@
 
 <script>
 import PimpMySound from './components/PimpMySound.vue'
-import FileInput from './components/FileInput.vue'
+import AudioPlayer from './components/AudioPlayer.vue'
 import CrossFader from './components/Crossfader.vue'
 import FileList from './components/FileList.vue'
 import InputManager from './components/InputManager.vue'
@@ -21,7 +21,7 @@ import InputManager from './components/InputManager.vue'
 export default {
   name: 'app',
   components: {
-    PimpMySound, FileInput, CrossFader, FileList, InputManager
+    PimpMySound, AudioPlayer, CrossFader, FileList, InputManager
   },
 };
 </script>

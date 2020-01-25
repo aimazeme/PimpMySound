@@ -17,7 +17,8 @@
               :pressed.sync="btn.state"
               @click="execute(btn.caption)"
               variant="outline-dark">
-              <!--img src="btn[idx].img" alt="asdf"/-->
+              <b-icon icon="arrow-up"/>
+              <!--img :src="'../assets/' + btn.img" alt="asdf"/-->
               {{ btn.caption }}
             </b-button>
           </b-button-group>
@@ -38,6 +39,7 @@ import { AudioCtx2} from '../main';
 import AudioFilter from './AudioFilter.vue';
 import VolumeSlider from './VolumeSlider.vue';
 import Soundtrack from './Soundtrack';
+
 /**
  * Audio States
  */
@@ -65,7 +67,7 @@ export default {
         file: null,
         myToggle: false,
         buttons: [
-          { caption: 'x0.5', state: false, id: '1', img: '../assets/backwards.svg' },
+          { caption: 'x0.5', state: false, id: '1', img: 'flag' },
           { caption: 'Pause', state: false, id: '2', img:  '../assets/backwards.svg' },
           { caption: 'Play', state: false, id: '3', img:  '../assets/backwards.svg'},
           { caption: 'Stop', state: false, id: '4', img:  '../assets/backwards.svg'},
