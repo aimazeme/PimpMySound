@@ -1,32 +1,46 @@
 <template>
     <div>
-    <canvas id="canvas" width="600" height="50"></canvas>
+        <canvas v-bind:id="'canvas'+playerNr" width="950" height="50"></canvas>
     </div>
 </template>
 
 <script>
+
+        // <Soundtrack v-bind:playerNr="playerNr"/>
+    // EventBus.$on('loadRight', data => {
+    //     if (this.playerNr == 2) {
+    //       this.file = data.source;
+    //       this.drawAudio(this.file);
+    //     }
+
+    //       drawAudio(response) {
+    //     this.source = this.audioContext.createBufferSource();
+    //     window.console.log(response); 
+    //     response.arrayBuffer()
+    //     .then(audioData => {this.audioContext.decodeAudioData(audioData)
+    //       .then(buffer => {
+    //           EventBus.$emit("SongData", {buffer: buffer, playerNr: this.playerNr});
+    //         this.source.buffer = buffer;
+    //       });
+    //     });
+    //   },
 import { EventBus } from '../main';
-import { AudioCtx } from '../main';
-// import { AudioCtx2} from '../main';
 
 export default {
     name: 'Soundtrack',
 
     props: {
-
+        playerNr: Number,
     },
     date(){
         return{
-            audioContext: new AudioContext(),
             data: null
         }
     },
 
     created(){
-        // window.AudioContext = window.AudioContext || window.webkitAudioContext,
-        // this.audioContext = new AudioContext()
 
-    //           loadAudio(response) {
+    //  loadAudio(response) {
     //     this.source = this.audioContext.createBufferSource();
     //     window.console.log(response); 
     //     // EventBus.$emit("leftSongData", source);
@@ -38,18 +52,12 @@ export default {
     //       });});
     //   },
 
-        EventBus.$on('leftSongData', (buffer) => {  
-
-            // if (data.playerNr === this.playerNr) {
-            this.audioContext=AudioCtx;
-            // window.console.log(data.file); 
-            this.data = buffer;
+        EventBus.$on('SongData', (data) => {
+            if (this.playerNr==data.playerNr){   
+            this.data = data.buffer;
             this.drawAudio(this.data);
-            // }
+            }
         });
-        // EventBus.$on('rightSongData', (data) => {     
-
-        // });
     },
      
     mounted () {
@@ -68,6 +76,7 @@ export default {
            window.console.log("drawaudio");
             this.draw(this.normalizeData(this.filterData(buffer)));
         },
+
         filterData(audioBuffer) {
             const rawData = audioBuffer.getChannelData(0); // We only need to work with one channel of data
             const samples = 10000; // Number of samples we want to have in our final data set
@@ -91,7 +100,7 @@ export default {
 
         draw(normalizedData) {
             // set up the canvas
-            const canvas = document.getElementById("canvas");    //querySelector("canvas");
+            const canvas = document.getElementById("canvas" + this.playerNr);    //querySelector("canvas");
             // const dpr = window.devicePixelRatio || 1;
             const padding = 20;
             canvas.width = canvas.offsetWidth ;
@@ -101,7 +110,6 @@ export default {
             ctx.translate(0, canvas.offsetHeight / 2); // set Y = 0 to be in the middle of the canvas
             // draw the line segments
             const width = canvas.offsetWidth / normalizedData.length;
-            window.console.log("drawww");
             for (let i = 0; i < normalizedData.length; i++) {
                 const x = width * i;
                 let height = normalizedData[i] * canvas.offsetHeight - padding;
@@ -116,7 +124,10 @@ export default {
 
         drawLineSegment(ctx, x, height, width, isEven) {
             ctx.lineWidth = 1; // how thick the line is
-            ctx.strokeStyle = "#fff"; // what color our line is
+            if(this.playerNr==1)
+            ctx.strokeStyle = "PINK"; // what color our line is
+            else
+            ctx.strokeStyle = "turquoise"; // what color our line is
             ctx.beginPath();
             height = isEven ? height : -height;
             ctx.moveTo(x, 0);

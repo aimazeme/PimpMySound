@@ -6,7 +6,6 @@
     <FileInput v-bind:playerNr="2"/>
     <CrossFader/>   
     <FileList/>    
-    <Soundtrack/>
     <InputManager/>
     </div>
   </div>
@@ -17,13 +16,12 @@ import PimpMySound from './components/PimpMySound.vue'
 import FileInput from './components/FileInput.vue'
 import CrossFader from './components/Crossfader.vue'
 import FileList from './components/FileList.vue'
-import Soundtrack from './components/Soundtrack.vue'
 import InputManager from './components/InputManager.vue'
 
 export default {
   name: 'app',
   components: {
-    PimpMySound, FileInput, CrossFader, FileList, Soundtrack, InputManager
+    PimpMySound, FileInput, CrossFader, FileList, InputManager
   },
 };
 </script>
