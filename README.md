@@ -171,4 +171,5 @@ Im folgenden werden die verschiedenen Komponenten dieses Projektes genannt und k
 - https://vuejs.org/v2/guide/
 - https://getbootstrap.com/docs/4.4/getting-started/introduction/
 - https://bootstrap-vue.js.org/docs
+
   
