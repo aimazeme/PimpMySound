@@ -2,11 +2,12 @@
     <b-card id="card" bg-variant="default" class="text-center"> 
       <div id="center-file-input-bar">
 
-        <Soundtrack v-bind:playerNr="playerNr"/>
-
         <b-form-group label-for="file-small" label-size="sm">
         
-          <p class="mt-3"> {{file ? file.name : 'No track given'}}</p>
+          <p class="mt-3"><strong>{{file ? file.name : 'No track given'}}</strong> </p>
+          <hr>
+
+          <Soundtrack v-bind:playerNr="playerNr"/>
 
           <VolumeSlider v-bind:playerNr="playerNr"/>
 
@@ -26,9 +27,12 @@
         </b-form-group>
         
       </div> 
-      <AudioFilter id="afilter" filterType="lowshelf" nextComponent="filter-peaking" v-bind:playerNr="playerNr"/>
-      <AudioFilter id="afilter" filterType="peaking" nextComponent="filter-highshelf" v-bind:playerNr="playerNr"/>
-      <AudioFilter id="afilter" filterType="highshelf" nextComponent="crossFader" v-bind:playerNr="playerNr"/>
+      <AudioFilter id="afilter" filterType="lowshelf" nextComponent="filter-peaking" v-bind:playerNr="playerNr" 
+        v-bind:minFreq="20" v-bind:maxFreq="7000" v-bind:minGain="-20" v-bind:maxGain="20" v-bind:minQ="0" v-bind:maxQ="10"/>
+      <AudioFilter id="afilter" filterType="peaking" nextComponent="filter-highshelf" v-bind:playerNr="playerNr" 
+        v-bind:minFreq="7000" v-bind:maxFreq="13000" v-bind:minGain="-20" v-bind:maxGain="20" v-bind:minQ="0" v-bind:maxQ="10"/>
+      <AudioFilter id="afilter" filterType="highshelf" nextComponent="crossFader" v-bind:playerNr="playerNr" 
+        v-bind:minFreq="13000" v-bind:maxFreq="20000" v-bind:minGain="-20" v-bind:maxGain="20" v-bind:minQ="0" v-bind:maxQ="10"/>
     </b-card>
 </template>
 
@@ -53,83 +57,83 @@ const EnumAudioStates = {
 };
 
 export default {
-    name: 'FileInput',
-    
-    props: {
-      playerNr: Number,
-    },
+  name: 'FileInput',
+  
+  props: {
+    playerNr: Number,
+  },
 
-    components: {
-      AudioFilter, VolumeSlider, Soundtrack
-    },
+  components: {
+    AudioFilter, VolumeSlider, Soundtrack
+  },
 
-    data: function() {
-        return {
-        file: null,
-        myToggle: false,
-        buttons: [
-          { caption: 'x0.5', state: false, id: '1', img: 'flag' },
-          { caption: 'Pause', state: false, id: '2', img:  '../assets/backwards.svg' },
-          { caption: 'Play', state: false, id: '3', img:  '../assets/backwards.svg'},
-          { caption: 'Stop', state: false, id: '4', img:  '../assets/backwards.svg'},
-          { caption: 'x1.5', state: false, id: '5', img:  '../assets/backwards.svg'}
-        ],
-        audioContext: AudioContext,
-        source: AudioBufferSourceNode,
-        audioState: EnumAudioStates.isStopped,
-        startTime: Number,
-        currentTime: Number,
-        songs: [],
+  data: function() {
+      return {
+      file: null,
+      myToggle: false,
+      nextComponent: "filter-lowshelf",
+      buttons: [
+        { caption: 'x0.5', state: false, id: '1', img: 'flag' },
+        { caption: 'Pause', state: false, id: '2', img:  '../assets/backwards.svg' },
+        { caption: 'Play', state: false, id: '3', img:  '../assets/backwards.svg'},
+        { caption: 'Stop', state: false, id: '4', img:  '../assets/backwards.svg'},
+        { caption: 'x1.5', state: false, id: '5', img:  '../assets/backwards.svg'}
+      ],
+      audioContext: AudioContext,
+      source: AudioBufferSourceNode,
+      audioState: EnumAudioStates.isStopped,
+      startTime: Number,
+      currentTime: Number,
+      songs: [],
+    }
+  }, 
+  
+  async mounted() {
+    EventBus.$on("fileChosen", file => {
+      this.loadFile(file);
+    });
+
+    EventBus.$on('midi-speedLeft', midiData => {
+      if (this.playerNr == 1 && this.file != null) {
+        this.changePlaybackRate(midiData.btnValue)
       }
-    }, 
-    
-    async mounted() {
-      EventBus.$on("fileChosen", file => {
-        this.loadFile(file);
-      });
+    });
 
-      EventBus.$on('midi-speedLeft', midiData => {
-        if (this.playerNr == 1 && this.file != null) {
-          this.changePlaybackRate(midiData.btnValue)
-        }
-      });
+    EventBus.$on('midi-speedRight', midiData => {
+      if (this.playerNr == 2 && this.file != null) {
+        this.changePlaybackRate(midiData.btnValue)
+      }
+    });
 
-      EventBus.$on('midi-speedRight', midiData => {
-        if (this.playerNr == 2 && this.file != null) {
-          this.changePlaybackRate(midiData.btnValue)
+    EventBus.$on('midi-playLeft', midiData => {
+      if (this.playerNr == 1 && this.file != null && midiData.cmd === 8) {
+        if(this.audioState === EnumAudioStates.isPlaying){
+          this.pauseAudio()
+        } else if(this.audioState === EnumAudioStates.isPaused){
+          this.pauseAudio()
+        } else if(this.audioState === EnumAudioStates.isStopped) {
+        this.playAudio();
         }
-      });
+      }
+    });
+          
+    EventBus.$on('midi-playRight', midiData => {
+      if (this.playerNr == 2 && this.file != null && midiData.cmd === 8) {
+        this.playAudio();
+      }
+    });
 
-      EventBus.$on('midi-playLeft', midiData => {
-        if (this.playerNr == 1 && this.file != null && midiData.btnValue === 0) {
-          if(this.audioState === EnumAudioStates.isPlaying){
-            this.pauseAudio()
-          } else if(this.audioState === EnumAudioStates.isPaused){
-            this.pauseAudio()
-          } else if(this.audioState === EnumAudioStates.isStopped) {
-          this.playAudio(0);
-          }
-        }
-      });
-           
-      EventBus.$on('midi-playRight', midiData => {
-        if (this.playerNr == 2 && this.file != null && midiData.btnValue === 0) {
-          this.playAudio(0);
-        }
-      });
-
-      EventBus.$on('midi-stopLeft', midiData => {
-        window.console.log("stop left")
-          if (this.playerNr == 1 && this.file != null && midiData.btnValue === 0) {
-            this.stopAudio();
-          }
-        });
-    
-      EventBus.$on('midi-stopRight', midiData => {
-        if (this.playerNr == 2 && this.file != null && midiData.btnValue === 0) {
+    EventBus.$on('midi-stopLeft', midiData => {
+        if (this.playerNr == 1 && this.file != null && midiData.cmd === 8) {
           this.stopAudio();
         }
       });
+  
+    EventBus.$on('midi-stopRight', midiData => {
+      if (this.playerNr == 2 && this.file != null && midiData.cmd === 8) {
+        this.stopAudio();
+      }
+    });
 
       EventBus.$on('loadLeft', data => {
         if (this.playerNr == 1) {
@@ -146,10 +150,10 @@ export default {
       });
     },
 
-    created() {
-      if (this.playerNr == 1) this.audioContext = AudioCtx;
-      else this.audioContext = AudioCtx2;
-    },
+  created() {
+    if (this.playerNr == 1) this.audioContext = AudioCtx;
+    else this.audioContext = AudioCtx2;
+  },
 
     watch:{
       file: function(){       
@@ -162,72 +166,59 @@ export default {
           if (this.audioState === EnumAudioStates.isPlaying) this.source.stop();
             this.buttons[this.audioState].state = false;
             this.audioState = EnumAudioStates.isStopped;
-        }
+        }  
       }
     },
 
-    computed: {
-      btnStates() {
-          return this.buttons.map(btn => btn.state)
-      }
+  computed: {
+    btnStates() {
+        return this.buttons.map(btn => btn.state)
+    }
+  },
+
+  methods: {
+    /**
+     * Map functions to buttons
+     */
+    execute(state) {
+      switch (state) {
+        case 'Play':
+          this.playAudio();
+          break;
+        case 'Pause':
+          this.pauseAudio();
+          break;
+        case 'Stop':
+          this.stopAudio()
+          break;
+        case 'x1.5':
+          this.increasePlaybackRate();
+            break;
+        case 'x0.5':
+          this.decreasePlaybackRate();
+          break;
+      } 
+    },
+    
+    /**
+     * Change the playbackRate to the given midi value in percentage
+     */
+    changePlaybackRate(value){
+        this.source.playbackRate.value = value / 127 * 2
     },
 
-    methods: {
-      /**
-       * Map functions to buttons
-       */
-      execute(state) {
-        switch (state) {
-          case 'Play':
-            this.playAudio(0);
-            break;
-          case 'Pause':
-            this.pauseAudio();
-            break;
-          case 'Stop':
-            this.stopAudio()
-            break;
-          case 'x1.5':
-            this.increasePlaybackRate();
-              break;
-          case 'x0.5':
-            this.decreasePlaybackRate();
-            break;
-        } 
-      },
-      
-      /**
-       * Change the playbackRate to the given midi value in percentage
-       */
-      changePlaybackRate(value){
-          this.source.playbackRate.value = value / 127 * 2
-      },
-
-      /**
-       * Increase the playbackRate to 1.5 if enabled else to 1
-       */
-      increasePlaybackRate(){
-        if(this.buttons[EnumAudioStates.isPacedUp].state === true){
-        this.source.playbackRate.value = 1.5;
-        this.buttons[EnumAudioStates.isSlowedDown].state  = false;
-        } else {
-          this.source.playbackRate.value = 1;
-          this.buttons[EnumAudioStates.isPacedUp].state  = false;
-        }       
-      }, 
-
-      /**
-       * Slow down the playbackRate to 0.5 if enabled else to 1
-       */
-      decreasePlaybackRate(){
-        if(this.buttons[EnumAudioStates.isSlowedDown].state === true){
-        this.source.playbackRate.value = 0.5;
-        this.buttons[EnumAudioStates.isPacedUp].state = false;
-        } else {
-          this.source.playbackRate.value = 1;
-          this.buttons[EnumAudioStates.isSlowedDown].state  = false;
-        }   
-      },
+    /**
+     * Increase the playbackRate to 1.5 if enabled else to 1
+     */
+    increasePlaybackRate(){
+      if(this.buttons[EnumAudioStates.isPacedUp].state === true){
+      this.source.playbackRate.value = 1.5;
+      this.buttons[EnumAudioStates.isSlowedDown].state  = false;
+      } else {
+        this.source.playbackRate.value = 1;
+        this.buttons[EnumAudioStates.isPacedUp].state  = false;
+      }       
+    }, 
 
       /**
        * Loads the audio file into the buffer
@@ -261,71 +252,68 @@ export default {
         this.audioState = newState;
       },
     
-      /**
-       * Starts playing the audio at given offset
-       */
-      playAudio(offset) {
-        if (this.file !== null) {       
-          if (this.audioState === EnumAudioStates.isPlaying) this.stopAudio();
-          else if(this.audioState === EnumAudioStates.isPaused) {
-            this.pauseAudio();
+    /**
+     * Starts playing the audio at given offset
+     */
+    playAudio() {
+      if (this.file !== null) {       
+        if (this.audioState === EnumAudioStates.isPlaying) this.stopAudio();
+        else if(this.audioState === EnumAudioStates.isPaused) {
+          this.pauseAudio();
+        }
+        else {            
+          this.loadAudio(this.file);        
+          this.source.start(0);
+          if(this.buttons[EnumAudioStates.isPacedUp].state){
+            this.increasePlaybackRate();
           }
-          else {            
-            this.loadAudio(this.file);        
-            this.source.start(0, offset);
-            if(this.buttons[EnumAudioStates.isPacedUp].state){
-              this.increasePlaybackRate();
-            }
-            if(this.buttons[EnumAudioStates.isSlowedDown].state){
-              this.decreasePlaybackRate();
-            }
-            // if (offset === 0) { 
-            //   this.startTime = performance.now(); 
-            // } 
-            this.changeCurrentStateTo(EnumAudioStates.isPlaying);
-            EventBus.$emit('to-filter-lowshelf', {audioNode: this.source, playerNr: this.playerNr});
-          }         
-        } else this.buttons[EnumAudioStates.isPlaying].state = false;
-      },
-
-      /**
-       * Pauses the music or resumes it if it was paused 
-       */
-      pauseAudio() {
-        if (this.file === null || this.audioState === EnumAudioStates.isStopped) this.buttons[EnumAudioStates.isPaused].state = false;
-        else if (this.audioState === EnumAudioStates.isPlaying) {
-          this.audioContext.suspend();
-          this.changeCurrentStateTo(EnumAudioStates.isPaused);
-        } else if (this.audioState === EnumAudioStates.isPaused) {
-          this.audioContext.resume();
+          if(this.buttons[EnumAudioStates.isSlowedDown].state){
+            this.decreasePlaybackRate();
+          }
+          // if (offset === 0) { 
+          //   this.startTime = performance.now(); 
+          // } 
           this.changeCurrentStateTo(EnumAudioStates.isPlaying);
+          EventBus.$emit('to-filter-lowshelf', {audioNode: this.source, playerNr: this.playerNr});
         }         
-      },
+      } else this.buttons[EnumAudioStates.isPlaying].state = false;
+    },
 
-      /**
-       * Completely stops the audio, needs to be played anew
-       */
-      stopAudio() {
-        if (this.file === null) this.buttons[EnumAudioStates.isStopped].state = false;
-        else if (this.audioState !== EnumAudioStates.isStopped) {
-          // if(this.audioState === EnumAudioStates.isPaused){
-          //   this.audioContext.resume();
-          // }
-          this.source.stop();                      
-          this.audioContext.resume();
-          this.changeCurrentStateTo(EnumAudioStates.isStopped)        
-        } else this.playAudio(0);        
-      },
+    pauseAudio() {
+      if (this.file === null || this.audioState === EnumAudioStates.isStopped) this.buttons[EnumAudioStates.isPaused].state = false;
+      else if (this.audioState === EnumAudioStates.isPlaying) {
+        this.audioContext.suspend();
+        this.changeCurrentStateTo(EnumAudioStates.isPaused);
+      } else if (this.audioState === EnumAudioStates.isPaused) {
+        this.audioContext.resume();
+        this.changeCurrentStateTo(EnumAudioStates.isPlaying);
+      }         
+    },
+
+    /**
+     * Completely stops the audio, needs to be played anew
+     */
+    stopAudio() {
+      if (this.file === null) this.buttons[EnumAudioStates.isStopped].state = false;
+      else if (this.audioState !== EnumAudioStates.isStopped) {
+        // if(this.audioState === EnumAudioStates.isPaused){
+        //   this.audioContext.resume();
+        // }
+        this.source.stop();                      
+        this.audioContext.resume();
+        this.changeCurrentStateTo(EnumAudioStates.isStopped)        
+      } else this.playAudio(0);        
+    },
       
-      /**
-       * Load a given file into this.property file
-       */
-      loadFile(file) {
-        if (file.target.files.length == 0) return;
-        this.file = file;
-        window.console.log(file.target.files[0]);       
-      },      
-    }
+    /**
+     * Load a given file into this.property file
+     */
+    loadFile(file) {
+      if (file.target.files.length == 0) return;
+      this.file = file;
+      window.console.log(file.target.files[0]);       
+    },      
+  }
 }
 </script>
 

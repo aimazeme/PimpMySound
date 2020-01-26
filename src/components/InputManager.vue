@@ -21,14 +21,14 @@ const midiStates = [
   { id: 16, property: 'sendLeft'},
   { id: 17, property: 'sendRight'},
 
-//   { id: 6, property: '1lowshelfFreq'},
-//   { id: 7, property: '1lowshelfGain'},
-//   { id: 8, property: '2lowshelfFreq'},
-//   { id: 9, property: '2lowshelfGain'},
-//   { id: 10, property: 'lhshelfFreq'},
-//   { id: 11, property: 'lhshelfGain'},
-//   { id: 12, property: 'rhshelfFreq'},
-//   { id: 13, property: 'rhshelfGain'}, 
+   { id: 6, property: 'to-filter-lowshelf-Freq-1'},
+  { id: 7, property: 'to-filter-lowshelf-Gain-1'},
+  { id: 8, property: 'to-filter-lowshelf-Freq-2'},
+   { id: 9, property: 'to-filter-lowshelf-Gain-2'},
+  { id: 10, property: 'to-filter-highshelf-Freq-1'},
+  { id: 11, property: 'to-filter-highshelf-Gain-1'},
+  { id: 12, property: 'to-filter-highshelf-Freq-2'},
+   { id: 13, property: 'to-filter-highshelf-Gain-2'}, 
 ];
 
 midiStates.forEach(entry => midiMap.set(entry.id,entry.property))
@@ -37,22 +37,13 @@ window.console.log(midiMap.get(48));
 
 export default {
     name: 'InputManager',
-
-    watch: { 
-        btnID: function(){}
-    },
-
     created() {
     navigator.requestMIDIAccess().then(this.onMidiDevice.bind(this));
-//      window.addEventListener('keyup', this.onKeyboardEvent.bind(this));
-        this.midiMapping = new Map();
-        this.keyboardMapping = new Map();
     },
 
     methods: {
         onMidiDevice(access) {
             const inputs = access.inputs.values();
-            // const outputs = access.outputs.values();
 
             for (const input of inputs) {
                 window.console.log(input);
@@ -62,20 +53,14 @@ export default {
 
         onMidiEvent(event) {
             let cmd = event.data[0] >> 4;
-            // let channel = event.data[0] & 0xf;
             let btnID = event.data[1];
             let btnValue = event.data[2];
 
             window.console.log(`cmd: ${cmd}, btnID: ${btnID}, value: ${btnValue}`);
-            //   window.console.log('midi-' + midiMap.get(btnID))
             if(cmd === 11 )
                 EventBus.$emit('midi-' + midiMap.get(btnID), {cmd: cmd, btnID: btnID, btnValue: btnValue});
             else if ( cmd === 8 && (btnValue === 0 || btnValue === 127))
                 EventBus.$emit('midi-' + midiMap.get(btnID), {cmd: cmd, btnID: btnID, btnValue: btnValue});
-        },
-
-        mapMidi(btnID, callbackFn) {
-            this.midiMapping.set(btnID, callbackFn);
         },
     }
 }
