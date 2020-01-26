@@ -95,13 +95,11 @@ Die Bearbeitung der geladenen Dateien erfolgt entweder über die Maus oder einen
 
 Nun kann man die Audio-Dateien mit dem Play-Button abspielen, mit dem Pause-Button pausieren und mit dem Stop-Button beenden. Außerdem gibt es zusätzlich den "x0.5"-Button, der die Wiedergabe um 0.5 verlangsamt und einen "x1.5"-Button, welcher die Wiedergabe wiederum um 1.5 beschleunigt. Des weiteren kann die Lautstärke über den Volume-Slider angepasst werden. Zudem gibt es einen Crossfader mit dem man die Möglichkeit hat, die zwei Audio-Dateien ineinander überlaufen zu lassen.
 
-Um Die Dateien nun zu bearbeiten, kann man verschiedene Filter benutzen die mit Lowshelf, Peaking und Highshelf.
+Um Die Dateien nun zu bearbeiten, kann man verschiedene Filter benutzen wie z.B. Lowshelf, Peaking und Highshelf.
 
-Im Lowshelf befinden sich 
+Die Shelf-Filter besitzen die sogenannte Cutoff Frequency. Alle Frequenzen über bzw. unter dieser gegebenen Frequenz werden mit dem gegebenen Gain-Value verstärkt oder geschwächt.
 
-Im Peaking befinden sich ... , mit denen man .... machen kann?
-
-Im Highshelf befinden sich ..., mit .... .
+Der Peaking-Filter ist in der Lage Frequenzen um die gegebene Frequenz zu verstärken oder auch zu schwächen, je nach Gain Value. Der Quality-Faktor beschreibt bei diesem Filter die Breite des Frequenzbandes.
 
 ## Tastenbelegung
 
@@ -140,7 +138,8 @@ Im folgenden werden die verschiedenen Komponenten dieses Projektes genannt und k
   - Funktionen: Play-, Pause-, Stop-, x0.5-, x1.5- Button; 
   - Lädt Komponenten: AudioFilter, VolumeSlider, Soundtrack
 - **AudioFilter**
-  - Enthält die Funktionen der Lowshelf, Highshelf und Peaking Filter
+  - eine dynamische Komponente die unter gegebener Konfiguration im Template jeder möglicher Filter sein kann
+  - [hier welche Filter möglich sind](https://developer.mozilla.org/en-US/docs/Web/API/BiquadFilterNode)
 - **Crossfader**
   - Enthält die Funktionen, die es möglich machen zwei Audio-Dateien ineinander überlaufen zu lassen
 - **FileList**
