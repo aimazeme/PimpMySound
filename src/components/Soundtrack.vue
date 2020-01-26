@@ -12,7 +12,8 @@ export default {
     props: {
         playerNr: Number,
     },
-    date(){
+    
+    data(){
         return{
             data: null
         }

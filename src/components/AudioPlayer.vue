@@ -134,14 +134,14 @@ export default {
       EventBus.$on('loadLeft', data => {
         if (this.playerNr == 1) {
           this.file = data.source;
-          this.loadAudio(this.file);
-        }
+            this.drawAudio(this.file);
+          }
       });
        
       EventBus.$on('loadRight', data => {
         if (this.playerNr == 2) {
           this.file = data.source;
-          this.loadAudio(this.file);
+          this.drawAudio(this.file);
         }
       });
     },
@@ -162,7 +162,6 @@ export default {
           if (this.audioState === EnumAudioStates.isPlaying) this.source.stop();
             this.buttons[this.audioState].state = false;
             this.audioState = EnumAudioStates.isStopped;
-            this.loadAudio(this.file);       
         }
       }
     },
@@ -239,8 +238,14 @@ export default {
         response.arrayBuffer().then(audioData => {
             this.audioContext.decodeAudioData(audioData).then(buffer => {
               this.source.buffer = buffer; 
-              EventBus.$emit("SongData", {buffer: buffer, playerNr: this.playerNr});
-                          
+            });
+        }).catch(window.console.log());
+      },
+
+      drawAudio(response){
+        response.arrayBuffer().then(audioData => {
+          this.audioContext.decodeAudioData(audioData).then(buffer => {
+            EventBus.$emit("SongData", {buffer: buffer, playerNr: this.playerNr});         
             });
         }).catch(window.console.log());
       },
@@ -262,6 +267,9 @@ export default {
       playAudio(offset) {
         if (this.file !== null) {       
           if (this.audioState === EnumAudioStates.isPlaying) this.stopAudio();
+          else if(this.audioState === EnumAudioStates.isPaused) {
+            this.pauseAudio();
+          }
           else {            
             this.loadAudio(this.file);        
             this.source.start(0, offset);
@@ -300,7 +308,11 @@ export default {
       stopAudio() {
         if (this.file === null) this.buttons[EnumAudioStates.isStopped].state = false;
         else if (this.audioState !== EnumAudioStates.isStopped) {
-          this.source.stop(); 
+          // if(this.audioState === EnumAudioStates.isPaused){
+          //   this.audioContext.resume();
+          // }
+          this.source.stop();                      
+          this.audioContext.resume();
           this.changeCurrentStateTo(EnumAudioStates.isStopped)        
         } else this.playAudio(0);        
       },

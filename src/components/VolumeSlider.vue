@@ -21,7 +21,7 @@ export default {
     data() {  
         return {
             sliderMaxValue: 100,
-            sliderValue: 0,
+            sliderValue: 50,
             gainNode: GainNode
         }     
     },
