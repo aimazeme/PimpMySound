@@ -62,9 +62,9 @@ export default {
     data() {
         return {
             filterNode: AudioNode,
-            frequency: minFreq,
+            frequency: this.minFreq,
             gain: 0,
-            Qval: minQ,
+            Qval: this.minQ,
             enabled: true,
             prevAudioNode: null,
             gainEnabled: true,
