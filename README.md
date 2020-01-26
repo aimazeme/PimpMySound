@@ -115,7 +115,7 @@ Der Notch-Filter wird eine Frequenz als Mitte seines Bandes übergeben. Frequenz
 
 ## Tastenbelegung Midi-Controller(Behringer CMD MM-1)
 
-<img src="./src/assets/midi.jpeg" alt="Midi" title="Midi-Controller" width="350" height="400" />
+<img src="./src/assets/midi.jpeg" alt="Midi" title="Midi-Controller" width="350" height="600"/>
 
 
 ## Verwendete Technologien
