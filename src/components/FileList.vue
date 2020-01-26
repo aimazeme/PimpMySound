@@ -3,31 +3,19 @@
      
         <div class="container" id="musicLib">
             <b-form-group>
-                            
+
                 <b-form-file 
                     class="mb-2"
                     id="file-small" size="sm"
                     accept=".wav, .mp3, .m4a"
-                    v-model="file"
+                    v-model="files"
+                    multiple=""
                     ref="file-input"
                     :state="Boolean(file)"
                     placeholder="Choose a file or drop it here..."
-                    drop-placeholder="Drop file here..." >
+                    drop-placeholder="Drop file here..."
+                    >
                 </b-form-file> 
-
-                <b-button variant="secondary" id="addTrack" size="sm" @click="addTrack()">Add Track</b-button>
-                <b-form inline>
-                    <b-form inline>
-                        <b-button
-                            variant="danger"
-                            id="reset"
-                            size="sm"   
-                            @click="clearSelectedFile()" 
-                            class="mr-2">Reset
-                        </b-button>
-                        <p id="selected" class="mt-2">Selected file: {{file ? file.name : ''}}</p>
-                    </b-form>
-                </b-form>
             </b-form-group>
         </div>
         
@@ -53,57 +41,73 @@
 </template>
 
 <script>
-import {EventBus} from '../main.js';
+import {
+    EventBus
+} from '../main.js';
 
 export default {
 
     name: 'filelist',
-    data () {
+    watch: {
+        files: function () {
+            for (const song of this.files) {
+                var newSong = {
+                    title: song.name,
+                    source: song
+                }
+                var isPresent = this.songs.find(e => e.title === newSong.title)
+                if (isPresent) continue
+                this.songs.push(newSong)
+            }
+            this.clearSelectedFile()
+        },
+    },
+    data() {
         return {
-            isHovering: false,
             file: null,
+            files: [],
             selectedFile: null,
             index: -1,
-            songs: [
-            ],
+            songs: [],
         }
     },
 
     created() {
         EventBus.$on('midi-filechooser', (data) => {
-            if(data.btnValue === 65){
+            if (data.btnValue === 65) {
                 //increase
-                if(this.songs.length > 0) {
-                if(this.index < this.songs.length - 1){
-                this.index += 1;
-                } else {
-                    this.index = 0;
-                }
-                 window.console.log(this.songs[this.index].title)
+                if (this.songs.length > 0) {
+                    if (this.index < this.songs.length - 1) {
+                        this.index += 1;
+                    } else {
+                        this.index = 0;
+                    }
                 }
             } else if (data.btnValue === 63) {
                 //decrease
                 if (this.songs.length > 0) {
-                   if(this.index > 0){
-                       this.index -= 1;
-                    } else if (this.index === 0){
-                       this.index = this.songs.length - 1
+                    if (this.index > 0) {
+                        this.index -= 1;
+                    } else if (this.index === 0) {
+                        this.index = this.songs.length - 1
+                    } else if (this.index === -1) {
+                        this.index = this.songs.length - 1
                     }
-                } 
+                }
             }
-            if(this.songs.length > 0) {
+            if (this.songs.length > 0) {
                 this.chooseFile(this.songs[this.index])
             }
         })
 
         EventBus.$on('midi-sendLeft', (data) => {
-            if(data.btnValue === 0){
+            if (data.cmd === 8) {
                 this.sendLeft();
             }
         });
 
         EventBus.$on('midi-sendRight', (data) => {
-            if(data.btnValue === 0){
+            if (data.cmd=== 8) {
                 this.sendRight();
             }
         });
@@ -165,6 +169,9 @@ export default {
                 
                 this.$refs['file-input'].reset()
             }
+        },
+        fileChosen(file) {
+            EventBus.$emit("fileChosen", file);
         }
     }
 }
@@ -176,11 +183,6 @@ export default {
     margin-top: 0%;
 }
 
-#addTrack {
-    margin-right: 0px;
-    margin-top: 5px;
-    float: right
-}
 
 #putLeft {
     margin: 10px;
@@ -210,9 +212,6 @@ export default {
     height: auto;
     float: right;
     padding: 10px
-}
-.hovering{
-  color: red
 }
 
 </style>

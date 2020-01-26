@@ -211,8 +211,8 @@ export default {
 .switch {
   position: relative;
   display: inline-block;
-  width: 60px;
-  height: 34px;
+  width: 50px;
+  height: 28px;
 }
 
 .switch input { 
@@ -236,9 +236,9 @@ export default {
 .slider:before {
   position: absolute;
   content: "";
-  height: 26px;
-  width: 26px;
-  left: 4px;
+  height: 20px;
+  width: 20px;
+  left: 1px;
   bottom: 4px;
   background-color: white;
   -webkit-transition: .4s;
@@ -250,7 +250,7 @@ input:checked + .slider {
 }
 
 input:focus + .slider {
-  box-shadow: 0 0 1px rgb(13, 51, 82);
+  box-shadow: 0 0 1px rgb(91, 194, 194);
 }
 
 input:checked + .slider:before {
