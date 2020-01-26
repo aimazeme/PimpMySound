@@ -47,8 +47,6 @@ export default {
         });
         
         EventBus.$on('midi-crossfader', (data) => {
-            window.console.log('midi')
-            window.console.log(data)
             this.sliderValue =  data.btnValue / 127 * this.sliderMaxValue
             this.adjustCrossfading()
         })

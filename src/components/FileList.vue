@@ -59,7 +59,7 @@ export default {
                 if (isPresent) continue
                 this.songs.push(newSong)
             }
-            this.clearLeftFiles()
+            this.clearSelectedFile()
         },
     },
     data() {
@@ -101,13 +101,13 @@ export default {
         })
 
         EventBus.$on('midi-sendLeft', (data) => {
-            if (data.btnValue === 0) {
+            if (data.cmd === 8) {
                 this.sendLeft();
             }
         });
 
         EventBus.$on('midi-sendRight', (data) => {
-            if (data.btnValue === 0) {
+            if (data.cmd=== 8) {
                 this.sendRight();
             }
         });
@@ -212,9 +212,6 @@ export default {
     height: auto;
     float: right;
     padding: 10px
-}
-.hovering{
-  color: red
 }
 
 </style>

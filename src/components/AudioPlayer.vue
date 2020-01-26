@@ -106,7 +106,7 @@ export default {
     });
 
     EventBus.$on('midi-playLeft', midiData => {
-      if (this.playerNr == 1 && this.file != null && midiData.btnValue === 0) {
+      if (this.playerNr == 1 && this.file != null && midiData.cmd === 8) {
         if(this.audioState === EnumAudioStates.isPlaying){
           this.pauseAudio()
         } else if(this.audioState === EnumAudioStates.isPaused){
@@ -118,20 +118,19 @@ export default {
     });
           
     EventBus.$on('midi-playRight', midiData => {
-      if (this.playerNr == 2 && this.file != null && midiData.btnValue === 0) {
+      if (this.playerNr == 2 && this.file != null && midiData.cmd === 8) {
         this.playAudio();
       }
     });
 
     EventBus.$on('midi-stopLeft', midiData => {
-      window.console.log("stop left")
-        if (this.playerNr == 1 && this.file != null && midiData.btnValue === 0) {
+        if (this.playerNr == 1 && this.file != null && midiData.cmd === 8) {
           this.stopAudio();
         }
       });
   
     EventBus.$on('midi-stopRight', midiData => {
-      if (this.playerNr == 2 && this.file != null && midiData.btnValue === 0) {
+      if (this.playerNr == 2 && this.file != null && midiData.cmd === 8) {
         this.stopAudio();
       }
     });
