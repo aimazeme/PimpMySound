@@ -15,7 +15,7 @@ Das Team während der gemeinsamen Arbeit am Projekt.
 4. [Tastenbelegung](#tastenbelegung)
 5. [Verwendete Technologien](#verwendete-technologien)
 6. [Technische Projektbeschreibung](#technische-projektbeschreibung)
-7. [Verwendete Ressourcen](#verwendete-ressourcen)
+7. [Quellen](#quellen)
 
 ## Projektidee
 
@@ -154,5 +154,10 @@ Im folgenden werden die verschiedenen Komponenten dieses Projektes genannt und k
 - **VolumeSlider**
   - Regelt die Lautstärke der geladenen Audio-Dateien
   
-  ## Verwendete Ressourcen
+  ## Quellen
+  
+  - https://vuejs.org/v2/guide/
+  - https://getbootstrap.com/docs/4.4/getting-started/introduction/
+  - https://bootstrap-vue.js.org/docs
+  
 
