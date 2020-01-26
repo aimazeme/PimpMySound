@@ -220,37 +220,53 @@ export default {
       }       
     }, 
 
-      /**
-       * Loads the audio file into the buffer
-       * @param {"path to the audio file"} url
-       */
-      loadAudio(response) {
-        this.source = this.audioContext.createBufferSource(); 
-        response.arrayBuffer().then(audioData => {
-            this.audioContext.decodeAudioData(audioData).then(buffer => {
-              this.source.buffer = buffer; 
-            });
-        }).catch(window.console.log());
-      },
+    /**
+     * Increase the playbackRate to 1.5 if enabled else to 1
+     */
+    decreasePlaybackRate(){
+      if(this.buttons[EnumAudioStates.isSlowedDown].state === true){
+      this.source.playbackRate.value = 0.5;
+      this.buttons[EnumAudioStates.isPacedUp].state  = false;
+      } else {
+        this.source.playbackRate.value = 1;
+        this.buttons[EnumAudioStates.isSlowedDown].state  = false;
+      }       
+    }, 
 
-      drawAudio(response){
-        response.arrayBuffer().then(audioData => {
+    /**
+     * Loads the audio file into the buffer
+     * @param {"path to the audio file"} url
+     */
+    loadAudio(response) {
+      this.source = this.audioContext.createBufferSource(); 
+      response.arrayBuffer().then(audioData => {
           this.audioContext.decodeAudioData(audioData).then(buffer => {
-            EventBus.$emit("SongData", {buffer: buffer, playerNr: this.playerNr});         
-            });
-        }).catch(window.console.log());
-      },
+            this.source.buffer = buffer; 
+          });
+      }).catch(window.console.log());
+    },
 
-      /**
-       * Change the internal audioState to the new one
-       * and set the previous enabled button false 
-       * @since only one button can be true at a time
-       */
-      changeCurrentStateTo(newState) {
-        this.buttons[this.audioState].state = false;
-        this.buttons[newState].state = true;
-        this.audioState = newState;
-      },
+    /**
+     * Send unchanged audio data of the file to the visualizer
+     */
+    drawAudio(response){
+      response.arrayBuffer().then(audioData => {
+        this.audioContext.decodeAudioData(audioData).then(buffer => {
+          EventBus.$emit("to-songDataTrack", {buffer: buffer, playerNr: this.playerNr});         
+          });
+      }).catch(window.console.log());
+    },
+
+    /**
+     * Change the internal audioState to the new one
+     * and set the previous enabled button false 
+     * @since only one button can be true at a time
+     */
+    changeCurrentStateTo(newState) {
+      this.buttons[this.audioState].state = false;
+      this.buttons[newState].state = true;
+      this.audioState = newState;
+    },
     
     /**
      * Starts playing the audio at given offset

@@ -181,7 +181,7 @@ export default {
                 EventBus.$emit('to-' + this.nextComponent, {audioNode: this.filterNode, playerNr: this.playerNr});
             } else {
                 this.prevAudioNode.disconnect();
-                window.console.log("Connecting Source " + this.playerNr + " to: " + this.nextComponent);
+                window.console.log(this.filterType.charAt(0).toUpperCase() + this.filterType.slice(1) + ": Forwarding Source " + this.playerNr + " to: " + this.nextComponent);
                 EventBus.$emit('to-' + this.nextComponent, {audioNode: this.prevAudioNode, playerNr: this.playerNr});
             }
         },
