@@ -131,7 +131,7 @@ export default {
         EventBus.$on('midi-to-filter-' + this.filterType+ "-Gain-2", (data) => {  
             if (this.playerNr == 2) {
                 if (this.gainEnabled) {
-                    this.gain = this.minFreq + ((data.btnValue / 127) * (this.maxFreq - this.minFreq));
+                    this.gain = this.minGain + ((data.btnValue / 127) * (this.maxGain - this.minGain));
                 }
             }            
         });
@@ -139,7 +139,7 @@ export default {
         EventBus.$on('midi-to-filter-' + this.filterType + "-Qual-2", (data) => {  
             if (this.playerNr == 2) {
                 if (this.qualityEnabled) {
-                    this.Qval = this.minFreq + ((data.btnValue / 127) * (this.maxFreq - this.minFreq));
+                    this.Qval = this.minQ + ((data.btnValue / 127) * (this.maxQ - this.minQ));
                 }
             }         
         });
@@ -154,7 +154,7 @@ export default {
         EventBus.$on('midi-to-filter-' + this.filterType+ "-Gain-1", (data) => {  
             if (this.playerNr == 1) {
                 if (this.gainEnabled) {
-                    this.gain = this.minFreq + ((data.btnValue / 127) * (this.maxFreq - this.minFreq));
+                    this.gain = this.minGain + ((data.btnValue / 127) * (this.maxGain - this.minGain));
                 }
             }          
         });
@@ -162,7 +162,7 @@ export default {
         EventBus.$on('midi-to-filter-' + this.filterType + "-Qual-1", (data) => {  
             if (this.playerNr == 1) {
                 if (this.qualityEnabled) {
-                    this.Qval = this.minFreq + ((data.btnValue / 127) * (this.maxFreq - this.minFreq));
+                    this.Qval = this.minQ + ((data.btnValue / 127) * (this.maxQ - this.minQ));
                 }
             }            
         });
