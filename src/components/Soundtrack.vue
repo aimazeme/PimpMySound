@@ -1,7 +1,7 @@
 <template>
     <div>
         <b-card id="visualizer" bg-variant="light" class="text-center">
-            <canvas v-bind:id="'canvas'+playerNr" width="1100" height="40"></canvas>
+            <canvas v-bind:id="'canvas'+playerNr" width="match-parent" height="50"></canvas>
         </b-card>
     </div>
 </template>
@@ -39,9 +39,9 @@ export default {
             this.draw(this.normalizeData(this.filterData(buffer)));
         },
 
-        /*
-         *Filtern des Buffers auf einen Channel und Genauigkeit der Visualisierung einstellen indem man in Samples teilt. 
-         */
+        /** 
+        * Filtering the buffer to only one channel and configuring the accuracy by dividing into samples.
+        */
         filterData(audioBuffer) {
             const rawData = audioBuffer.getChannelData(0);
             const samples = 10000; 
@@ -69,18 +69,18 @@ export default {
         /**
          * Configures the canvas element
          */
-        draw(normalizedData) {
-            const canvas = document.getElementById("canvas" + this.playerNr);    
-            const padding = 20;
-            canvas.width = canvas.offsetWidth ;
-            canvas.height = (canvas.offsetHeight );
+        draw(normalizedData){
+            const canvas = document.getElementById("canvas" + this.playerNr);
+            canvas.style.width ='100%';
+            canvas.style.height ='100%';
+            canvas.width = canvas.offsetWidth;
+            canvas.height = canvas.offsetHeight;
             const ctx = canvas.getContext("2d");
-            ctx.scale(0.7,1);
-            ctx.translate(0, canvas.offsetHeight / 2); 
+            ctx.translate(0, canvas.offsetHeight/2);
             const width = canvas.offsetWidth / normalizedData.length;
             for (let i = 0; i < normalizedData.length; i++) {
                 const x = width * i;
-                let height = normalizedData[i] * canvas.offsetHeight - padding;
+                let height = normalizedData[i] * canvas.offsetHeight;
                 if (height < 0) {
                     height = 0;
                 } else if (height > canvas.offsetHeight / 2) {
