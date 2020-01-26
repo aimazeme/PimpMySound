@@ -97,9 +97,13 @@ Die Audio-Dateien kann man mit dem Play-Button abspielen, mit dem Pause-Button p
 
 Um Die Dateien nun zu bearbeiten, kann man verschiedene Filter benutzen wie z.B. Lowshelf, Peaking und Highshelf. Aufgrund der begrenzten Möglichkeit der Kontrollelemente mit dem gegebenen MIDI-Controller, lassen sich nicht alle Filter mit diesem steuern. "TODO: Dennis Part"
 
-Die Shelf-Filter besitzen die sogenannte Cutoff Frequency. Alle Frequenzen über bzw. unter dieser gegebenen Frequenz werden mit dem gegebenen Gain-Value verstärkt oder geschwächt.
+Dem Low-/Highshelf-Filter wird eine Frequenz übergeben. Alle Frequenzen über bzw. unter dieser gegebenen Frequenz werden mit dem gegebenen Gain-Value verstärkt oder geschwächt.
 
-Der Peaking-Filter ist in der Lage Frequenzen um die gegebene Frequenz zu verstärken oder auch zu schwächen, je nach Gain Value. Der Quality-Faktor beschreibt bei diesem Filter die Breite des Frequenzbandes.
+Der Low-/Highpass-Filter besitzen eine Cutoff Frequency. Alle Frequenzen über bzw. unter dieser Frequenz werden herausgefiltert/abgeschnitten. 
+
+Der Notch-Filter wird eine Frequenz als Mitte seines Bandes übergeben. Frequenzen innerhalb dieses Bandes werden herausgefiltert. Sprich nur noch Frequenzen außerhalb dessen bleiben erhalten. Der Quality-Faktor beschreibt die Breite dieses Bandes.
+
+Der Peaking-Filter ist in der Lage Frequenzen um die gegebene Frequenz zu verstärken oder auch zu schwächen - je nach Gain Value. Der Quality-Faktor beschreibt bei diesem Filter die Breite des Frequenzbandes.
 
 ## Tastenbelegung
 
