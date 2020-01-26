@@ -2,11 +2,6 @@
 
 Im Rahmen der Projektarbeit des Moduls "Audio-und Videotechnik" ist "Pimp My Sound" entstanden, welches von Dennis Hiller, Dat Tony Nguyen Tien, Alihan Atmaca und Ai-Hong Ky entwickelt wurde.
 
-<img src="./src/assets/fun.jpeg" alt="Fun"
-	title="FunFriends" width="450" height="300" />
-  
-Das Team während der gemeinsamen Arbeit am Projekt.
-
 
 ## Inhalt
 
@@ -171,5 +166,5 @@ Im folgenden werden die verschiedenen Komponenten dieses Projektes genannt und k
 - https://vuejs.org/v2/guide/
 - https://getbootstrap.com/docs/4.4/getting-started/introduction/
 - https://bootstrap-vue.js.org/docs
-
+- https://i.redd.it/cyu56enchj121.jpg (Background Picture)
   
