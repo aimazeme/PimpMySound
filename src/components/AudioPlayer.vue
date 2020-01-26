@@ -31,8 +31,14 @@
         v-bind:minFreq="350" v-bind:maxFreq="1500" v-bind:minGain="-30" v-bind:maxGain="30" v-bind:minQ="0.0001" v-bind:maxQ="100"/>
       <AudioFilter id="afilter" filterType="peaking" nextComponent="filter-highshelf" v-bind:playerNr="playerNr" 
         v-bind:minFreq="1500" v-bind:maxFreq="3000" v-bind:minGain="-30" v-bind:maxGain="30" v-bind:minQ="0.0001" v-bind:maxQ="100"/>
-      <AudioFilter id="afilter" filterType="highshelf" nextComponent="crossFader" v-bind:playerNr="playerNr" 
+      <AudioFilter id="afilter" filterType="highshelf" nextComponent="filter-lowpass" v-bind:playerNr="playerNr" 
         v-bind:minFreq="3000" v-bind:maxFreq="8000" v-bind:minGain="-30" v-bind:maxGain="30" v-bind:minQ="0.0001" v-bind:maxQ="100"/>
+      <AudioFilter id="afilter" filterType="lowpass" nextComponent="filter-highpass" v-bind:playerNr="playerNr" 
+      v-bind:minFreq="350" v-bind:maxFreq="8000" v-bind:minGain="-30" v-bind:maxGain="30" v-bind:minQ="0.0001" v-bind:maxQ="100"/>
+      <AudioFilter id="afilter" filterType="highpass" nextComponent="filter-notch" v-bind:playerNr="playerNr" 
+      v-bind:minFreq="350" v-bind:maxFreq="8000" v-bind:minGain="-30" v-bind:maxGain="30" v-bind:minQ="0.0001" v-bind:maxQ="100"/>
+      <AudioFilter id="afilter" filterType="notch" nextComponent="crossFader" v-bind:playerNr="playerNr" 
+      v-bind:minFreq="350" v-bind:maxFreq="8000" v-bind:minGain="-30" v-bind:maxGain="30" v-bind:minQ="0.0001" v-bind:maxQ="100"/>
     </b-card>
 </template>
 
