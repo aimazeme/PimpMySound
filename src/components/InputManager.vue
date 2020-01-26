@@ -29,11 +29,13 @@ const midiStates = [
   { id: 11, property: 'to-filter-highshelf-Gain-1'},
   { id: 12, property: 'to-filter-highshelf-Freq-2'},
    { id: 13, property: 'to-filter-highshelf-Gain-2'}, 
+
+   
 ];
 
 midiStates.forEach(entry => midiMap.set(entry.id,entry.property))
 
-window.console.log(midiMap.get(48));
+// window.console.log(midiMap.get(48));
 
 export default {
     name: 'InputManager',
@@ -46,7 +48,7 @@ export default {
             const inputs = access.inputs.values();
 
             for (const input of inputs) {
-                window.console.log(input);
+                // window.console.log(input);
                 input.onmidimessage = this.onMidiEvent.bind(this);
             }
         },
@@ -56,7 +58,7 @@ export default {
             let btnID = event.data[1];
             let btnValue = event.data[2];
 
-            window.console.log(`cmd: ${cmd}, btnID: ${btnID}, value: ${btnValue}`);
+            // window.console.log(`cmd: ${cmd}, btnID: ${btnID}, value: ${btnValue}`);
             if(cmd === 11 )
                 EventBus.$emit('midi-' + midiMap.get(btnID), {cmd: cmd, btnID: btnID, btnValue: btnValue});
             else if ( cmd === 8 && (btnValue === 0 || btnValue === 127))

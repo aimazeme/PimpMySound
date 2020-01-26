@@ -65,7 +65,7 @@ export default {
             frequency: this.minFreq,
             gain: 0,
             Qval: this.minQ,
-            enabled: true,
+            enabled: false,
             prevAudioNode: null,
             gainEnabled: true,
             qualityEnabled: true

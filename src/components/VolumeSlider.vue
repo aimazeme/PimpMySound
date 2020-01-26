@@ -45,7 +45,6 @@ export default {
         }); 
 
         EventBus.$on('midi-volumeLeft', (data) => {
-            window.console.log('dfa')
             if(this.playerNr === 1) {
                 this.sliderValue =  data.btnValue / 127 * this.sliderMaxValue
                 this.adjustVolume()
