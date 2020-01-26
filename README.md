@@ -102,7 +102,7 @@ Die Bearbeitung der geladenen Dateien erfolgt entweder über die Maus oder einen
 
 Die Audio-Dateien kann man mit dem Play-Button abspielen, mit dem Pause-Button pausieren und mit dem Stop-Button beenden. Außerdem gibt es zusätzlich den "x0.5"-Button, der die Wiedergabe um 0.5 verlangsamt und einen "x1.5"-Button, welcher die Wiedergabe wiederum um 1.5 beschleunigt. Des Weiteren kann die Lautstärke über den Volume-Slider angepasst werden. Außerdem gibt es einen Crossfader der es ermöglicht, die zwei Audio-Dateien ineinander überlaufen zu lassen.
 
-Um Die Dateien nun zu bearbeiten, kann man verschiedene Filter benutzen wie z.B. Lowshelf, Peaking und Highshelf. Aufgrund der begrenzten Möglichkeit der Kontrollelemente mit dem gegebenen MIDI-Controller, lassen sich nicht alle Filter mit diesem steuern. "TODO: Dennis Part"
+Um Die Dateien nun zu bearbeiten, kann man nun verschiedene Filter benutzen wie z.B. Lowshelf, Peaking und Highshelf. Aufgrund der begrenzten Möglichkeit der Kontrollelemente mit dem gegebenen MIDI-Controller, lassen sich nicht alle Filter mit diesem steuern. Die Steuerung selbst, ist im folgenden Punkt erklärt.
 
 Dem Low-/Highshelf-Filter wird eine Frequenz übergeben. Alle Frequenzen über bzw. unter dieser gegebenen Frequenz werden mit dem gegebenen Gain-Value verstärkt oder geschwächt.
 
@@ -113,9 +113,7 @@ Der Low-/Highpass-Filter besitzen eine Cutoff Frequency. Alle Frequenzen über b
 Der Notch-Filter wird eine Frequenz als Mitte seines Bandes übergeben. Frequenzen innerhalb dieses Bandes werden herausgefiltert. Sprich nur noch Frequenzen außerhalb dessen bleiben erhalten. Der Quality-Faktor beschreibt die Breite dieses Bandes.
 
 
-## Tastenbelegung
-
-Ist die Nutzung des Audio-Players mit einem Midi-Controller erwünscht, so ...
+## Tastenbelegung Midi-Controller(Behringer CMD MM-1)
 
 <img src="./src/assets/midi.jpeg" alt="Midi" title="Midi-Controller" width="350" height="400" />
 
