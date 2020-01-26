@@ -7,6 +7,7 @@ Im Rahmen der Projektarbeit des Moduls "Audio-und Videotechnik" ist "Pimp My Sou
   
 Das Team während der gemeinsamen Arbeit am Projekt.
 
+
 ## Inhalt
 
 1. [Projektidee](#projektidee)
@@ -17,15 +18,18 @@ Das Team während der gemeinsamen Arbeit am Projekt.
 6. [Technische Projektbeschreibung](#technische-projektbeschreibung)
 7. [Quellen](#quellen)
 
+
 ## Projektidee
 
 Die grundsätzliche Idee bestand darin einen einfachen Web-Audio-Player/DJ Tool zu entwickeln, welchen man neben der Tastatur auch mit einem Midi-Controller steuern kann. Dieser Player soll zwei verschiedene Audio Dateien laden und diese gleichzeitig bearbeiten können. 
+
 
 ## Installationsanleitung
 
 Voraussetzungen:
 - [Node.js](https://nodejs.org/en/)
 - [Vue.js](https://vuejs.org/)
+
 
 ### Node.js Installation
 
@@ -54,6 +58,7 @@ npm -v
 
 MacOS und Windows Installer findet man hier: [Nodejs.org](https://nodejs.org/en/download/).
 
+
 ### Vue.js Installation
 
 #### Ubuntu
@@ -72,6 +77,7 @@ Um Vue.js auf MacOS zu installieren, im Terminal folgenden Befehl ausführen:
 npm i -g vue-cli eslint 
 
 ```
+
 ### Projektausführung
 
 Nun kann im Projektordner mit folgenden Befehlen alle benötigten Abhängigkeiten installieren:
@@ -87,6 +93,7 @@ npm run serve
 ```
 Das Projekt sollte sich jetzt unter der URL http://localhost:8080 im Browser befinden.
 
+
 ## Benutzeranleitung
 
 Mit "Pimp My Sound" können zwei verschiedene Audio-Dateien nach Lust und Laune mit verschiedenen Funktionen manipuliert werden. Der Nutzer kann seiner kreativen Ader hierbei freien Lauf lassen.
@@ -99,19 +106,20 @@ Um Die Dateien nun zu bearbeiten, kann man verschiedene Filter benutzen wie z.B.
 
 Dem Low-/Highshelf-Filter wird eine Frequenz übergeben. Alle Frequenzen über bzw. unter dieser gegebenen Frequenz werden mit dem gegebenen Gain-Value verstärkt oder geschwächt.
 
+Der Peaking-Filter ist in der Lage Frequenzen um die gegebene Frequenz zu verstärken oder auch zu schwächen - je nach Gain Value. Der Quality-Faktor beschreibt bei diesem Filter die Breite des Frequenzbandes.
+
 Der Low-/Highpass-Filter besitzen eine Cutoff Frequency. Alle Frequenzen über bzw. unter dieser Frequenz werden herausgefiltert/abgeschnitten. 
 
 Der Notch-Filter wird eine Frequenz als Mitte seines Bandes übergeben. Frequenzen innerhalb dieses Bandes werden herausgefiltert. Sprich nur noch Frequenzen außerhalb dessen bleiben erhalten. Der Quality-Faktor beschreibt die Breite dieses Bandes.
 
-Der Peaking-Filter ist in der Lage Frequenzen um die gegebene Frequenz zu verstärken oder auch zu schwächen - je nach Gain Value. Der Quality-Faktor beschreibt bei diesem Filter die Breite des Frequenzbandes.
 
 ## Tastenbelegung
 
 Ist die Nutzung des Audio-Players mit einem Midi-Controller erwünscht, so ...
 
-<img src="./src/assets/midi.jpeg" alt="Midi"
-	title="Midi-Controller" width="350" height="400" />
-  
+<img src="./src/assets/midi.jpeg" alt="Midi" title="Midi-Controller" width="350" height="400" />
+
+
 ## Verwendete Technologien
 
 - Web-Technologien
@@ -125,6 +133,7 @@ Ist die Nutzung des Audio-Players mit einem Midi-Controller erwünscht, so ...
    - [Musical Instrument Digital Interface (MIDI)](https://de.wikipedia.org/wiki/Musical_Instrument_Digital_Interface) 
  - Bibliotheken
 	 - [Bootstrap](https://getbootstrap.com/)
+
 
 ## Technische Projektbeschreibung
 
@@ -157,9 +166,11 @@ Im folgenden werden die verschiedenen Komponenten dieses Projektes genannt und k
   - Regelt die Lautstärke der geladenen Audio-Dateien
 - **Main**
   - besitzt globale Objekte, die ggf. zu importieren sind: EventBus, AudioCtx, AudioCtx2
-  ## Quellen
   
-  - https://vuejs.org/v2/guide/
-  - https://getbootstrap.com/docs/4.4/getting-started/introduction/
-  - https://bootstrap-vue.js.org/docs
+  
+## Quellen
+
+- https://vuejs.org/v2/guide/
+- https://getbootstrap.com/docs/4.4/getting-started/introduction/
+- https://bootstrap-vue.js.org/docs
   
