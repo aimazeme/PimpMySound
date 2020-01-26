@@ -28,11 +28,11 @@
         
       </div> 
       <AudioFilter id="afilter" filterType="lowshelf" nextComponent="filter-peaking" v-bind:playerNr="playerNr" 
-        v-bind:minFreq="20" v-bind:maxFreq="7000" v-bind:minGain="-20" v-bind:maxGain="20" v-bind:minQ="0" v-bind:maxQ="10"/>
+        v-bind:minFreq="350" v-bind:maxFreq="1500" v-bind:minGain="-30" v-bind:maxGain="30" v-bind:minQ="0.0001" v-bind:maxQ="100"/>
       <AudioFilter id="afilter" filterType="peaking" nextComponent="filter-highshelf" v-bind:playerNr="playerNr" 
-        v-bind:minFreq="7000" v-bind:maxFreq="13000" v-bind:minGain="-20" v-bind:maxGain="20" v-bind:minQ="0" v-bind:maxQ="10"/>
+        v-bind:minFreq="1500" v-bind:maxFreq="3000" v-bind:minGain="-30" v-bind:maxGain="30" v-bind:minQ="0.0001" v-bind:maxQ="100"/>
       <AudioFilter id="afilter" filterType="highshelf" nextComponent="crossFader" v-bind:playerNr="playerNr" 
-        v-bind:minFreq="13000" v-bind:maxFreq="20000" v-bind:minGain="-20" v-bind:maxGain="20" v-bind:minQ="0" v-bind:maxQ="10"/>
+        v-bind:minFreq="3000" v-bind:maxFreq="8000" v-bind:minGain="-30" v-bind:maxGain="30" v-bind:minQ="0.0001" v-bind:maxQ="100"/>
     </b-card>
 </template>
 
