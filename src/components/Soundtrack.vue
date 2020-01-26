@@ -23,7 +23,7 @@ export default {
     },
 
     created() {
-        EventBus.$on('SongData', (data) => {
+        EventBus.$on('to-songDataTrack', (data) => {
             if (this.playerNr==data.playerNr){   
             this.data = data.buffer;
             this.drawAudio(this.data);
@@ -38,9 +38,10 @@ export default {
         drawAudio(buffer){
             this.draw(this.normalizeData(this.filterData(buffer)));
         },
-/*
-    Filtern des Buffers auf einen Channel und Genauigkeit der Visualisierung einstellen indem man in Samples teilt. 
-*/
+
+        /*
+         *Filtern des Buffers auf einen Channel und Genauigkeit der Visualisierung einstellen indem man in Samples teilt. 
+         */
         filterData(audioBuffer) {
             const rawData = audioBuffer.getChannelData(0);
             const samples = 10000; 

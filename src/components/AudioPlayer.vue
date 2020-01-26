@@ -246,10 +246,13 @@ export default {
       }).catch(window.console.log());
     },
 
+    /**
+     * Send unchanged audio data of the file to the visualizer
+     */
     drawAudio(response){
       response.arrayBuffer().then(audioData => {
         this.audioContext.decodeAudioData(audioData).then(buffer => {
-          EventBus.$emit("SongData", {buffer: buffer, playerNr: this.playerNr});         
+          EventBus.$emit("to-songDataTrack", {buffer: buffer, playerNr: this.playerNr});         
           });
       }).catch(window.console.log());
     },
